@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "Zeladoria SJP",
+    "slug": "zeladoria-sjp",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Usamos sua localização para registrar automaticamente onde o problema foi identificado.",
+        "NSCameraUsageDescription": "Usamos a câmera para você anexar fotos como evidência do problema relatado.",
+        "NSPhotoLibraryUsageDescription": "Usamos a galeria para você anexar fotos como evidência do problema relatado."
+      }
+    },
+    "android": {
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Usamos sua localização para registrar automaticamente onde o problema foi identificado."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Usamos a galeria para você anexar fotos como evidência do problema relatado.",
+          "cameraPermission": "Usamos a câmera para você anexar fotos como evidência do problema relatado."
+        }
+      ]
+    ]
+  }
+}

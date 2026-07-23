@@ -1,0 +1,26 @@
+# Dependências
+node_modules/
+
+# Ambiente
+.env
+.env.local
+
+# Backend
+backend/dist/
+backend/uploads/
+backend/prisma/*.db
+
+# Mobile / Expo
+mobile/.expo/
+mobile/.expo-shared/
+mobile/dist/
+mobile/web-build/
+
+# Admin / Next.js
+admin/.next/
+admin/out/
+admin/tsconfig.tsbuildinfo
+
+# Sistema
+.DS_Store
+*.log

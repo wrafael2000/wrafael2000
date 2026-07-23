@@ -1,0 +1,119 @@
+// Modelagem do banco de dados — Zeladoria SJP
+// Ver docs/ARQUITETURA.md para o racional das entidades.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PapelUsuario {
+  CIDADAO
+  ADMIN
+  SECRETARIA
+}
+
+enum CategoriaChamado {
+  ILUMINACAO
+  PAVIMENTACAO
+  COLETA_LIXO
+  RISCO_SEGURANCA
+  ARBORIZACAO
+  SANEAMENTO
+  OUTROS
+}
+
+enum StatusChamado {
+  ABERTO
+  EM_TRIAGEM
+  EM_EXECUCAO
+  RESOLVIDO
+  CANCELADO
+}
+
+model Usuario {
+  id            String        @id @default(uuid())
+  nome          String
+  email         String        @unique
+  senhaHash     String
+  telefone      String?
+  cpf           String?       @unique
+  role          PapelUsuario  @default(CIDADAO)
+  pontosCivicos Int           @default(0) // reservado para gamificação futura
+  secretaria    Secretaria?   @relation(fields: [secretariaId], references: [id])
+  secretariaId  String?
+  chamados      Chamado[]     @relation("ChamadosDoCidadao")
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("usuarios")
+}
+
+model Secretaria {
+  id         String             @id @default(uuid())
+  nome       String             @unique // ex: "Secretaria de Obras e Viação"
+  categorias CategoriaChamado[] // categorias de chamado que esta secretaria atende
+  slaHoras   Int                @default(72) // prazo padrão de atendimento, usado no dashboard
+  chamados   Chamado[]
+  usuarios   Usuario[]
+  createdAt  DateTime           @default(now())
+
+  @@map("secretarias")
+}
+
+model Chamado {
+  id           String            @id @default(uuid())
+  protocolo    String            @unique @default(cuid())
+  categoria    CategoriaChamado
+  descricao    String
+  status       StatusChamado     @default(ABERTO)
+
+  // Geolocalização capturada automaticamente via GPS no momento do registro
+  latitude     Float
+  longitude    Float
+  endereco     String?           // opcional: preenchido por geocodificação reversa
+
+  cidadao      Usuario           @relation("ChamadosDoCidadao", fields: [cidadaoId], references: [id])
+  cidadaoId    String
+
+  secretaria   Secretaria?       @relation(fields: [secretariaId], references: [id])
+  secretariaId String?
+
+  fotos        Foto[]
+  historico    StatusHistorico[]
+
+  prazoLimite  DateTime?         // calculado a partir do slaHoras da secretaria
+
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@index([status])
+  @@index([categoria])
+  @@map("chamados")
+}
+
+model Foto {
+  id        String   @id @default(uuid())
+  url       String
+  chamado   Chamado  @relation(fields: [chamadoId], references: [id], onDelete: Cascade)
+  chamadoId String
+  createdAt DateTime @default(now())
+
+  @@map("fotos")
+}
+
+model StatusHistorico {
+  id             String        @id @default(uuid())
+  chamado        Chamado       @relation(fields: [chamadoId], references: [id], onDelete: Cascade)
+  chamadoId      String
+  statusAnterior StatusChamado?
+  statusNovo     StatusChamado
+  observacao     String?
+  alteradoPorId  String?
+  createdAt      DateTime      @default(now())
+
+  @@map("status_historico")
+}
