@@ -4,7 +4,9 @@ from .entrega_epi import EntregaEpi
 from .epi import Epi
 from .exame import Exame
 from .funcionario import Funcionario
+from .realizacao_treinamento import RealizacaoTreinamento
 from .setor import Setor
+from .treinamento import Treinamento
 from .usuario import Usuario
 
 __all__ = [
@@ -16,4 +18,6 @@ __all__ = [
     "Acidente",
     "Exame",
     "DocumentoSST",
+    "Treinamento",
+    "RealizacaoTreinamento",
 ]

@@ -101,3 +101,25 @@ class DocumentoSSTForm(FlaskForm):
     )
     observacao = TextAreaField("Observação", validators=[Optional()])
     submit = SubmitField("Salvar")
+
+
+class TreinamentoForm(FlaskForm):
+    nome = StringField("Nome do treinamento", validators=[DataRequired(), Length(max=150)])
+    carga_horaria = IntegerField(
+        "Carga horária (horas)", validators=[Optional(), NumberRange(min=1)]
+    )
+    validade_dias = IntegerField(
+        "Validade / reciclagem (dias)",
+        validators=[Optional(), NumberRange(min=1)],
+        description="Deixe em branco se o treinamento não exigir reciclagem periódica.",
+    )
+    submit = SubmitField("Salvar")
+
+
+class RealizacaoTreinamentoForm(FlaskForm):
+    funcionario_id = SelectField("Funcionário", coerce=int, validators=[DataRequired()])
+    treinamento_id = SelectField("Treinamento", coerce=int, validators=[DataRequired()])
+    data_realizacao = DateField("Data de realização", validators=[DataRequired()])
+    instrutor = StringField("Instrutor", validators=[Optional(), Length(max=120)])
+    observacao = StringField("Observação", validators=[Optional(), Length(max=255)])
+    submit = SubmitField("Salvar")

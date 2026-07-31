@@ -27,7 +27,9 @@ def create_app(config_class=Config):
         from .routes.exames import exames_bp
         from .routes.funcionarios import funcionarios_bp
         from .routes.main import main_bp
+        from .routes.realizacoes_treinamento import realizacoes_treinamento_bp
         from .routes.setores import setores_bp
+        from .routes.treinamentos import treinamentos_bp
 
         app.register_blueprint(main_bp)
         app.register_blueprint(auth_bp)
@@ -38,6 +40,8 @@ def create_app(config_class=Config):
         app.register_blueprint(acidentes_bp)
         app.register_blueprint(exames_bp)
         app.register_blueprint(documentos_bp)
+        app.register_blueprint(treinamentos_bp)
+        app.register_blueprint(realizacoes_treinamento_bp)
 
         registrar_comandos(app)
 

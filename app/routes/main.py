@@ -3,7 +3,15 @@ from datetime import date, timedelta
 from flask import Blueprint, redirect, render_template, url_for
 from flask_login import login_required
 
-from ..models import Acidente, DocumentoSST, EntregaEpi, Exame, Funcionario, Setor
+from ..models import (
+    Acidente,
+    DocumentoSST,
+    EntregaEpi,
+    Exame,
+    Funcionario,
+    RealizacaoTreinamento,
+    Setor,
+)
 
 main_bp = Blueprint("main", __name__)
 
@@ -42,6 +50,17 @@ def _coletar_alertas_vencimento():
                     "descricao": documento.nome,
                     "vencimento": documento.data_validade,
                     "status": documento.status,
+                }
+            )
+
+    for realizacao in RealizacaoTreinamento.query.all():
+        if realizacao.status in ("vencido", "vencendo"):
+            alertas.append(
+                {
+                    "tipo": "Treinamento",
+                    "descricao": f"{realizacao.treinamento.nome} — {realizacao.funcionario.nome}",
+                    "vencimento": realizacao.data_validade,
+                    "status": realizacao.status,
                 }
             )
 

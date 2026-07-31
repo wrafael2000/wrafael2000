@@ -91,12 +91,17 @@ primeira execução.
   responsável técnico
 - Dashboard reformulado com uma tabela única de **próximos vencimentos**,
   reunindo EPIs, exames e documentos vencidos/vencendo, ordenados pelo mais
-  urgente — a mesma tabela vai receber treinamentos na próxima fase
+  urgente
+
+**Fase 5 — Treinamentos e certificações**
+- Catálogo de treinamentos/NRs (nome, carga horária, validade/reciclagem)
+- Registro de realizações por funcionário, com validade calculada
+  automaticamente a partir do treinamento
+- Treinamentos vencidos/vencendo passam a aparecer também na tabela de
+  próximos vencimentos do dashboard, junto com EPIs, exames e documentos
 
 ## Roadmap (próximas fases)
 
-- **Fase 5 — Treinamentos e certificações**: controle de treinamentos de NRs
-  por funcionário, com validade e alertas de renovação.
 - **Fase 6 — Riscos psicossociais e clima organizacional**: aplicação dos
   questionários **HSE-IT** e **COPSOQ II** (uso livre/acadêmico) com plano de
   ação, pesquisa de clima organizacional personalizável, e avaliação de
