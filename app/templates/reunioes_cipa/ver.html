@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}Ata da CIPA - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Ata — {{ reuniao.data.strftime("%d/%m/%Y") }} ({{ reuniao.tipo }})</h1>
+  <div>
+    <a href="{{ url_for('reunioes_cipa.editar', reuniao_id=reuniao.id) }}" class="botao-secundario">Editar</a>
+    <a href="{{ url_for('reunioes_cipa.listar') }}" class="botao-secundario">Voltar</a>
+  </div>
+</div>
+
+<h2>Pauta</h2>
+<p class="dica">{{ reuniao.pauta or "Não informada." }}</p>
+
+<h2>Ata / deliberações</h2>
+<p>{{ reuniao.ata }}</p>
+
+<h2>Presentes</h2>
+<table class="tabela">
+  <thead><tr><th>Funcionário</th><th>Cargo</th></tr></thead>
+  <tbody>
+    {% for membro in reuniao.presentes %}
+    <tr><td>{{ membro.funcionario.nome }}</td><td>{{ membro.cargo }}</td></tr>
+    {% else %}
+    <tr><td colspan="2">Nenhum presente registrado.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

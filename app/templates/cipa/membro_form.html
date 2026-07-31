@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} - Gestão de SST{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+<p class="dica">Mandato: {{ mandato.data_inicio.strftime("%d/%m/%Y") }} a {{ mandato.data_fim.strftime("%d/%m/%Y") }}</p>
+<form method="post" novalidate class="card card-larga">
+  {{ form.hidden_tag() }}
+  <div class="campo">
+    {{ form.funcionario_id.label }}
+    {{ form.funcionario_id(class_="input") }}
+    {% for erro in form.funcionario_id.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.tipo_representacao.label }}
+    {{ form.tipo_representacao(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.cargo.label }}
+    {{ form.cargo(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.data_inicio.label }}
+    {{ form.data_inicio(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.data_fim.label }}
+    {{ form.data_fim(class_="input") }}
+    <small>{{ form.data_fim.description }}</small>
+  </div>
+  {{ form.submit(class_="botao") }}
+  <a href="{{ url_for('cipa.ver_mandato', mandato_id=mandato.id) }}" class="botao-secundario">Cancelar</a>
+</form>
+{% endblock %}

@@ -141,17 +141,38 @@ primeira execução.
   PDFs (`app/relatorios_pdf.py`) — evita ter a mesma conta feita em dois
   lugares que podem ficar dessincronizados
 
+**Fase 8 — CIPA (Comissão Interna de Prevenção de Acidentes)**
+- Mandatos (gestões, geralmente anuais conforme a NR-5), com opção de
+  encerrar/reabrir
+- Membros por mandato: funcionário, representação (empregador/empregado) e
+  cargo (presidente, vice-presidente, titular, suplente)
+- Atas de reunião (ordinária/extraordinária): pauta, deliberações e registro
+  de quais membros estiveram presentes
+- SIPAT: edições anuais com tema e período, e programação de atividades
+  (título, data, horário, responsável, local)
+
 ## Próximos passos (ideias para continuar)
 
-O roadmap original (7 fases) está completo. Algumas ideias para quem quiser
-continuar evoluindo o projeto:
+O roadmap original (7 fases) mais o módulo de CIPA estão completos.
+Algumas ideias para quem quiser continuar evoluindo o projeto:
 
 - Login para funcionários (hoje só existe usuário administrador)
-- Upload de arquivos (anexar o PDF do PGR/PCMSO, fotos de acidentes)
+- Upload de arquivos (anexar o PDF do PGR/PCMSO, fotos de acidentes, lista
+  de presença assinada da SIPAT)
 - Notificações por e-mail quando um item estiver vencendo
 - Gráficos no dashboard (ex.: Chart.js) além das tabelas atuais
 - Migrar de SQLite para PostgreSQL para uso em produção
 - Testes automatizados (pytest) cobrindo as rotas principais
+- **Biblioteca de Normas Regulamentadoras (NRs)**: catálogo/checklist de
+  conformidade por norma, com link para o texto oficial (não reproduzimos o
+  texto legal completo aqui, para evitar desatualização/erro em uma
+  ferramenta de compliance)
+- **Integração com o eSocial** (eventos S-2210/CAT, S-2220, S-2240): exige
+  certificado digital e acesso ao webservice do governo, que não é possível
+  configurar/testar neste ambiente. O caminho realista é modelar os campos
+  dos eventos e gerar o XML no leiaute oficial, deixando a assinatura e
+  transmissão para fora do sistema (ou para uma integração futura com
+  certificado real)
 
 ## Aprendendo com este projeto
 

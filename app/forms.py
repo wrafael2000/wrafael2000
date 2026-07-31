@@ -5,17 +5,21 @@ from wtforms import (
     IntegerField,
     PasswordField,
     SelectField,
+    SelectMultipleField,
     StringField,
     SubmitField,
     TextAreaField,
+    TimeField,
 )
 from wtforms.validators import DataRequired, Email, Length, NumberRange, Optional
 
 from .models.acidente import GRAVIDADES, TIPOS_ACIDENTE
+from .models.cipa import CARGOS_CIPA, TIPOS_REPRESENTACAO
 from .models.documento_sst import TIPOS_DOCUMENTO
 from .models.exame import RESULTADOS, TIPOS_EXAME
 from .models.plano_acao_psicossocial import STATUS_PLANO_ACAO
 from .models.questionario import TIPOS_QUESTIONARIO
+from .models.reuniao_cipa import TIPOS_REUNIAO_CIPA
 
 
 class LoginForm(FlaskForm):
@@ -171,3 +175,59 @@ class RespostaPublicaForm(FlaskForm):
 
     setor_id = SelectField("Setor (opcional)", coerce=int, validators=[Optional()])
     submit = SubmitField("Enviar respostas")
+
+
+class MandatoCipaForm(FlaskForm):
+    data_inicio = DateField("Início do mandato", validators=[DataRequired()])
+    data_fim = DateField("Fim do mandato", validators=[DataRequired()])
+    submit = SubmitField("Salvar")
+
+
+class MembroCipaForm(FlaskForm):
+    funcionario_id = SelectField("Funcionário", coerce=int, validators=[DataRequired()])
+    tipo_representacao = SelectField(
+        "Representação", choices=[(t, t) for t in TIPOS_REPRESENTACAO], validators=[DataRequired()]
+    )
+    cargo = SelectField("Cargo", choices=[(c, c) for c in CARGOS_CIPA], validators=[DataRequired()])
+    data_inicio = DateField("Início no cargo", validators=[Optional()])
+    data_fim = DateField(
+        "Fim no cargo",
+        validators=[Optional()],
+        description="Preencha apenas se o membro saiu antes do fim do mandato.",
+    )
+    submit = SubmitField("Salvar")
+
+
+class ReuniaoCipaForm(FlaskForm):
+    mandato_id = SelectField("Mandato", coerce=int, validators=[DataRequired()])
+    data = DateField("Data da reunião", validators=[DataRequired()])
+    tipo = SelectField(
+        "Tipo", choices=[(t, t) for t in TIPOS_REUNIAO_CIPA], validators=[DataRequired()]
+    )
+    pauta = TextAreaField("Pauta", validators=[Optional()])
+    ata = TextAreaField("Ata (deliberações)", validators=[DataRequired()])
+    presentes = SelectMultipleField(
+        "Membros presentes",
+        coerce=int,
+        validators=[Optional()],
+        description="Segure Ctrl (ou Cmd no Mac) para selecionar mais de um.",
+    )
+    submit = SubmitField("Salvar")
+
+
+class SipatEdicaoForm(FlaskForm):
+    titulo = StringField("Título", validators=[DataRequired(), Length(max=150)])
+    tema = StringField("Tema (opcional)", validators=[Optional(), Length(max=150)])
+    data_inicio = DateField("Data de início", validators=[DataRequired()])
+    data_fim = DateField("Data de encerramento", validators=[DataRequired()])
+    submit = SubmitField("Salvar")
+
+
+class AtividadeSipatForm(FlaskForm):
+    titulo = StringField("Título da atividade", validators=[DataRequired(), Length(max=150)])
+    descricao = TextAreaField("Descrição", validators=[Optional()])
+    data = DateField("Data", validators=[DataRequired()])
+    hora_inicio = TimeField("Horário", validators=[Optional()])
+    responsavel = StringField("Responsável", validators=[Optional(), Length(max=120)])
+    local = StringField("Local", validators=[Optional(), Length(max=150)])
+    submit = SubmitField("Salvar")

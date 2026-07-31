@@ -22,6 +22,7 @@ def create_app(config_class=Config):
         from .routes.acidentes import acidentes_bp
         from .routes.aplicacoes import aplicacoes_bp
         from .routes.auth import auth_bp
+        from .routes.cipa import cipa_bp
         from .routes.documentos import documentos_bp
         from .routes.entregas_epi import entregas_epi_bp
         from .routes.epis import epis_bp
@@ -31,7 +32,9 @@ def create_app(config_class=Config):
         from .routes.pesquisa_publica import pesquisa_publica_bp
         from .routes.questionarios import questionarios_bp
         from .routes.realizacoes_treinamento import realizacoes_treinamento_bp
+        from .routes.reunioes_cipa import reunioes_cipa_bp
         from .routes.setores import setores_bp
+        from .routes.sipat import sipat_bp
         from .routes.treinamentos import treinamentos_bp
 
         app.register_blueprint(main_bp)
@@ -48,6 +51,9 @@ def create_app(config_class=Config):
         app.register_blueprint(questionarios_bp)
         app.register_blueprint(aplicacoes_bp)
         app.register_blueprint(pesquisa_publica_bp)
+        app.register_blueprint(cipa_bp)
+        app.register_blueprint(reunioes_cipa_bp)
+        app.register_blueprint(sipat_bp)
 
         registrar_comandos(app)
 
