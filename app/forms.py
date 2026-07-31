@@ -289,6 +289,38 @@ class EmpresaForm(FlaskForm):
     submit = SubmitField("Salvar")
 
 
+class DDSForm(FlaskForm):
+    data = DateField("Data", validators=[DataRequired()])
+    setor_id = SelectField("Setor", coerce=int, validators=[DataRequired()])
+    tema = StringField("Tema abordado", validators=[DataRequired(), Length(max=200)])
+    responsavel = StringField("Responsável pelo diálogo", validators=[DataRequired(), Length(max=120)])
+    conteudo = TextAreaField("Conteúdo / observações", validators=[Optional()])
+    participantes = SelectMultipleField(
+        "Participantes",
+        coerce=int,
+        validators=[Optional()],
+        description="Segure Ctrl (ou Cmd no Mac) para selecionar mais de um.",
+    )
+    submit = SubmitField("Salvar")
+
+
+class AprForm(FlaskForm):
+    titulo = StringField("Atividade/tarefa analisada", validators=[DataRequired(), Length(max=200)])
+    data = DateField("Data", validators=[DataRequired()])
+    setor_id = SelectField("Setor", coerce=int, validators=[DataRequired()])
+    local = StringField("Local", validators=[Optional(), Length(max=150)])
+    responsavel = StringField("Responsável pela análise", validators=[DataRequired(), Length(max=120)])
+    observacoes = TextAreaField("Observações", validators=[Optional()])
+    submit = SubmitField("Salvar")
+
+
+class EtapaAprForm(FlaskForm):
+    descricao_etapa = TextAreaField("Etapa da atividade", validators=[DataRequired()])
+    perigo_risco = TextAreaField("Perigo/risco identificado", validators=[DataRequired()])
+    medida_controle = TextAreaField("Medida de controle", validators=[DataRequired()])
+    submit = SubmitField("Adicionar etapa")
+
+
 class EsqueciSenhaForm(FlaskForm):
     email = StringField("E-mail", validators=[DataRequired(), Email()])
     codigo_recuperacao = StringField("Código de recuperação", validators=[DataRequired()])

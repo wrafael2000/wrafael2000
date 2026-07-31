@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block titulo %}{{ apr.titulo }} - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>{{ apr.titulo }}</h1>
+  <div style="display: flex; gap: 0.75rem;">
+    <a href="{{ url_for('apr.pdf', apr_id=apr.id) }}" class="botao">Baixar PDF</a>
+    <a href="{{ url_for('apr.editar', apr_id=apr.id) }}" class="botao-secundario">Editar</a>
+    <a href="{{ url_for('apr.listar') }}" class="botao-secundario">Voltar</a>
+  </div>
+</div>
+
+<div class="card card-larga">
+  <p><strong>Setor:</strong> {{ apr.setor.nome }}</p>
+  <p><strong>Data:</strong> {{ apr.data.strftime("%d/%m/%Y") }}</p>
+  {% if apr.local %}<p><strong>Local:</strong> {{ apr.local }}</p>{% endif %}
+  <p><strong>Responsável pela análise:</strong> {{ apr.responsavel }}</p>
+  {% if apr.observacoes %}<p><strong>Observações:</strong> {{ apr.observacoes }}</p>{% endif %}
+</div>
+
+<div class="cabecalho-pagina">
+  <h2>Etapas da atividade</h2>
+  <a href="{{ url_for('apr.nova_etapa', apr_id=apr.id) }}" class="botao">+ Adicionar etapa</a>
+</div>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Etapa</th>
+      <th>Perigo/risco</th>
+      <th>Medida de controle</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for etapa in apr.etapas %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ etapa.descricao_etapa }}</td>
+      <td>{{ etapa.perigo_risco }}</td>
+      <td>{{ etapa.medida_controle }}</td>
+      <td class="acoes">
+        <a href="{{ url_for('apr.editar_etapa', etapa_id=etapa.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('apr.excluir_etapa', etapa_id=etapa.id) }}"
+              onsubmit="return confirm('Remover esta etapa?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">Nenhuma etapa cadastrada. Adicione as etapas da atividade acima.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

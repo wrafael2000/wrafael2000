@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} - Gestão de SST{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+<p class="dica">APR: {{ apr.titulo }}</p>
+<form method="post" novalidate class="card card-larga">
+  {{ form.hidden_tag() }}
+  <div class="campo">
+    {{ form.descricao_etapa.label }}
+    {{ form.descricao_etapa(class_="input textarea") }}
+    {% for erro in form.descricao_etapa.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.perigo_risco.label }}
+    {{ form.perigo_risco(class_="input textarea") }}
+    {% for erro in form.perigo_risco.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.medida_controle.label }}
+    {{ form.medida_controle(class_="input textarea") }}
+    {% for erro in form.medida_controle.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  {{ form.submit(class_="botao") }}
+  <a href="{{ url_for('apr.ver', apr_id=apr.id) }}" class="botao-secundario">Cancelar</a>
+</form>
+{% endblock %}

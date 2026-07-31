@@ -281,6 +281,25 @@ pergunta o e-mail e a nova senha.
   mostra uma explicação resumida do questionário usado (HSE-IT, COPSOQ II,
   CBI ou Clima Organizacional)
 
+**Fase 12 — Geradores de DDS e APR (parte 1 de 2 dos geradores de documentos)**
+- **DDS — Diálogo Diário de Segurança** (`DDS`): registra data, setor, tema
+  abordado, responsável pelo diálogo, conteúdo/observações e a lista de
+  participantes (escolhidos entre os funcionários ativos). Cada registro
+  pode ser baixado em PDF, com o cabeçalho da empresa e uma lista de
+  presença com coluna de assinatura (para imprimir e colher assinatura de
+  quem participou, se a empresa preferir o registro físico)
+- **APR — Análise Preliminar de Risco** (`APR`): a tela de criação registra
+  a atividade/tarefa, setor, data, local e responsável pela análise; depois
+  de criada, a tela de detalhes permite adicionar quantas etapas forem
+  necessárias, cada uma com o perigo/risco identificado e a medida de
+  controle correspondente. Também pode ser baixada em PDF
+- **Sobre o gerador**: em ambos os casos, o sistema só monta o documento no
+  layout padrão com os dados já cadastrados (empresa, setores,
+  funcionários) — o conteúdo técnico (temas, riscos, medidas de controle)
+  é sempre digitado por quem está usando o sistema. Isso vale também para
+  os próximos geradores (PGR, PCMSO, LTCAT e PPP), que serão adicionados
+  em uma próxima etapa
+
 ## Próximos passos (ideias para continuar)
 
 O roadmap original (7 fases) mais os módulos de CIPA, biblioteca de NRs,

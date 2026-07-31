@@ -2,6 +2,7 @@
 
 import io
 from datetime import date
+from xml.sax.saxutils import escape
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -135,6 +136,88 @@ def gerar_pdf_relatorio_geral(dados):
         )
     else:
         elementos.append(Paragraph("Nenhum item vencido ou vencendo no momento.", _estilo_texto))
+
+    doc.build(elementos)
+    buffer.seek(0)
+    return buffer
+
+
+def _paragrafo_livre(texto, estilo=None):
+    """Paragraph a partir de texto digitado pelo usuário (escapa &, <, > para não quebrar o XML do reportlab)."""
+    texto_seguro = escape(texto).replace("\n", "<br/>")
+    return Paragraph(texto_seguro, estilo or _estilo_texto)
+
+
+def gerar_pdf_dds(dds):
+    buffer = io.BytesIO()
+    doc, elementos = _novo_documento(buffer, "Diálogo Diário de Segurança (DDS)")
+
+    elementos.append(
+        _tabela(
+            ["Campo", "Valor"],
+            [
+                ["Data", dds.data.strftime("%d/%m/%Y")],
+                ["Setor", dds.setor.nome],
+                ["Tema abordado", dds.tema],
+                ["Responsável pelo diálogo", dds.responsavel],
+            ],
+            larguras=[5 * cm, 11 * cm],
+        )
+    )
+
+    if dds.conteudo:
+        elementos.append(Paragraph("Conteúdo / observações", _estilo_secao))
+        elementos.append(_paragrafo_livre(dds.conteudo))
+
+    elementos.append(Paragraph("Lista de presença", _estilo_secao))
+    if dds.participantes:
+        elementos.append(
+            _tabela(
+                ["Participante", "Assinatura"],
+                [[p.nome, ""] for p in dds.participantes],
+                larguras=[8 * cm, 8 * cm],
+            )
+        )
+    else:
+        elementos.append(Paragraph("Nenhum participante registrado.", _estilo_texto))
+
+    doc.build(elementos)
+    buffer.seek(0)
+    return buffer
+
+
+def gerar_pdf_apr(apr):
+    buffer = io.BytesIO()
+    doc, elementos = _novo_documento(buffer, "Análise Preliminar de Risco (APR)")
+
+    linhas_cabecalho = [
+        ["Atividade/tarefa", apr.titulo],
+        ["Setor", apr.setor.nome],
+        ["Data", apr.data.strftime("%d/%m/%Y")],
+        ["Responsável pela análise", apr.responsavel],
+    ]
+    if apr.local:
+        linhas_cabecalho.insert(2, ["Local", apr.local])
+    elementos.append(_tabela(["Campo", "Valor"], linhas_cabecalho, larguras=[5 * cm, 11 * cm]))
+
+    if apr.observacoes:
+        elementos.append(Paragraph("Observações", _estilo_secao))
+        elementos.append(_paragrafo_livre(apr.observacoes))
+
+    elementos.append(Paragraph("Etapas, perigos/riscos e medidas de controle", _estilo_secao))
+    if apr.etapas:
+        elementos.append(
+            _tabela(
+                ["Etapa", "Perigo/risco", "Medida de controle"],
+                [
+                    [etapa.descricao_etapa, etapa.perigo_risco, etapa.medida_controle]
+                    for etapa in apr.etapas
+                ],
+                larguras=[5.3 * cm, 5.3 * cm, 5.4 * cm],
+            )
+        )
+    else:
+        elementos.append(Paragraph("Nenhuma etapa cadastrada.", _estilo_texto))
 
     doc.build(elementos)
     buffer.seek(0)

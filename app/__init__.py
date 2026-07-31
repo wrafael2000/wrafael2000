@@ -24,8 +24,10 @@ def create_app(config_class=Config):
         from .cli import registrar_comandos
         from .routes.acidentes import acidentes_bp
         from .routes.aplicacoes import aplicacoes_bp
+        from .routes.apr import apr_bp
         from .routes.auth import auth_bp
         from .routes.cipa import cipa_bp
+        from .routes.dds import dds_bp
         from .routes.documentos import documentos_bp
         from .routes.empresa import empresa_bp
         from .routes.entregas_epi import entregas_epi_bp
@@ -61,6 +63,8 @@ def create_app(config_class=Config):
         app.register_blueprint(sipat_bp)
         app.register_blueprint(normas_bp)
         app.register_blueprint(empresa_bp)
+        app.register_blueprint(dds_bp)
+        app.register_blueprint(apr_bp)
 
         registrar_comandos(app)
 

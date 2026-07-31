@@ -1,6 +1,8 @@
 from .acidente import Acidente
 from .aplicacao import Aplicacao, Envio, Resposta
+from .apr import Apr, EtapaApr
 from .cipa import MandatoCipa, MembroCipa
+from .dds import DDS
 from .documento_sst import DocumentoSST
 from .empresa import Empresa
 from .entrega_epi import EntregaEpi
@@ -44,4 +46,7 @@ __all__ = [
     "NormaRegulamentadora",
     "ItemConformidadeNR",
     "Empresa",
+    "DDS",
+    "Apr",
+    "EtapaApr",
 ]
