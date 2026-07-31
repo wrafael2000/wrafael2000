@@ -65,12 +65,42 @@ def abrir_navegador(url):
     webbrowser.open(url)
 
 
+def resetar_senha(app):
+    from app.extensions import db
+    from app.models import Usuario
+
+    with app.app_context():
+        print()
+        print("=== Redefinir senha de um usuário ===")
+        email = input("E-mail do usuário: ").strip().lower()
+        usuario = Usuario.query.filter_by(email=email).first()
+        if not usuario:
+            print(f"Nenhum usuário encontrado com o e-mail '{email}'.")
+            return
+
+        senha = getpass("Nova senha: ")
+        confirmacao = getpass("Confirme a nova senha: ")
+        if senha != confirmacao:
+            print("As senhas digitadas não são iguais. Nada foi alterado.")
+            return
+
+        usuario.set_senha(senha)
+        db.session.commit()
+        print(f"Senha do usuário '{email}' redefinida com sucesso.")
+
+
 def main():
     preparar_ambiente()
 
     from app import create_app
 
     app = create_app()
+
+    if "--resetar-senha" in sys.argv:
+        resetar_senha(app)
+        input("\nPressione Enter para fechar...")
+        return
+
     criar_admin_se_necessario(app)
 
     url = "http://127.0.0.1:5000"
