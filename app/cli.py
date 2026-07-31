@@ -2,7 +2,7 @@ import click
 
 from .extensions import db
 from .models import Usuario
-from .seed_data import seed_questionarios
+from .seed_data import seed_normas_regulamentadoras, seed_questionarios
 
 
 def registrar_comandos(app):
@@ -31,3 +31,12 @@ def registrar_comandos(app):
             click.echo(f"Questionários criados: {', '.join(criados)}")
         else:
             click.echo("Nenhum questionário novo (todos já existiam).")
+
+    @app.cli.command("seed-normas")
+    def seed_normas_command():
+        """Cria o catálogo padrão de Normas Regulamentadoras (NR-1 a NR-36)."""
+        criadas = seed_normas_regulamentadoras()
+        if criadas:
+            click.echo(f"Normas criadas: {', '.join(criadas)}")
+        else:
+            click.echo("Nenhuma norma nova (todas já existiam).")

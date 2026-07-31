@@ -60,7 +60,10 @@ flask create-admin
 # 5. (Opcional) Criar os questionários padrão de riscos psicossociais
 flask seed-questionarios
 
-# 6. Rodar o servidor de desenvolvimento
+# 6. (Opcional) Criar o catálogo padrão de Normas Regulamentadoras
+flask seed-normas
+
+# 7. Rodar o servidor de desenvolvimento
 python run.py
 ```
 
@@ -151,10 +154,26 @@ primeira execução.
 - SIPAT: edições anuais com tema e período, e programação de atividades
   (título, data, horário, responsável, local)
 
+**Fase 9 — Biblioteca de Normas Regulamentadoras (NRs)**
+- Catálogo de NRs (`flask seed-normas` popula NR-1 a NR-36, exceto NR-2 e
+  NR-27, que foram revogadas). **Importante:** os números e títulos foram
+  digitados manualmente e podem estar desatualizados — confira sempre a
+  lista oficial e vigente no
+  [portal do governo](https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/seguranca-e-saude-no-trabalho/normas-regulamentadoras)
+  antes de usar para fins de auditoria. Não reproduzimos o texto legal
+  completo de cada norma, só um catálogo com link para a fonte oficial
+- Cada norma pode ser marcada como aplicável ou não à empresa, e recebe um
+  checklist de itens de conformidade (descrição, status — conforme/não
+  conforme/em andamento/não aplicável —, responsável e prazo)
+- Catálogo e checklist são totalmente editáveis pela interface, então é
+  possível corrigir qualquer norma e adicionar as que não vieram no seed
+  (ex.: normas mais recentes)
+
 ## Próximos passos (ideias para continuar)
 
-O roadmap original (7 fases) mais o módulo de CIPA estão completos.
-Algumas ideias para quem quiser continuar evoluindo o projeto:
+O roadmap original (7 fases) mais os módulos de CIPA e biblioteca de NRs
+estão completos. Algumas ideias para quem quiser continuar evoluindo o
+projeto:
 
 - Login para funcionários (hoje só existe usuário administrador)
 - Upload de arquivos (anexar o PDF do PGR/PCMSO, fotos de acidentes, lista
@@ -163,10 +182,6 @@ Algumas ideias para quem quiser continuar evoluindo o projeto:
 - Gráficos no dashboard (ex.: Chart.js) além das tabelas atuais
 - Migrar de SQLite para PostgreSQL para uso em produção
 - Testes automatizados (pytest) cobrindo as rotas principais
-- **Biblioteca de Normas Regulamentadoras (NRs)**: catálogo/checklist de
-  conformidade por norma, com link para o texto oficial (não reproduzimos o
-  texto legal completo aqui, para evitar desatualização/erro em uma
-  ferramenta de compliance)
 - **Integração com o eSocial** (eventos S-2210/CAT, S-2220, S-2240): exige
   certificado digital e acesso ao webservice do governo, que não é possível
   configurar/testar neste ambiente. O caminho realista é modelar os campos

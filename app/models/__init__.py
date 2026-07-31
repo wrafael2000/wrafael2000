@@ -6,6 +6,7 @@ from .entrega_epi import EntregaEpi
 from .epi import Epi
 from .exame import Exame
 from .funcionario import Funcionario
+from .norma_regulamentadora import ItemConformidadeNR, NormaRegulamentadora
 from .plano_acao_psicossocial import PlanoAcaoPsicossocial
 from .questionario import Pergunta, Questionario
 from .realizacao_treinamento import RealizacaoTreinamento
@@ -37,4 +38,6 @@ __all__ = [
     "ReuniaoCipa",
     "SipatEdicao",
     "AtividadeSipat",
+    "NormaRegulamentadora",
+    "ItemConformidadeNR",
 ]

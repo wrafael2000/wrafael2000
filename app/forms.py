@@ -17,6 +17,7 @@ from .models.acidente import GRAVIDADES, TIPOS_ACIDENTE
 from .models.cipa import CARGOS_CIPA, TIPOS_REPRESENTACAO
 from .models.documento_sst import TIPOS_DOCUMENTO
 from .models.exame import RESULTADOS, TIPOS_EXAME
+from .models.norma_regulamentadora import STATUS_CONFORMIDADE
 from .models.plano_acao_psicossocial import STATUS_PLANO_ACAO
 from .models.questionario import TIPOS_QUESTIONARIO
 from .models.reuniao_cipa import TIPOS_REUNIAO_CIPA
@@ -230,4 +231,24 @@ class AtividadeSipatForm(FlaskForm):
     hora_inicio = TimeField("Horário", validators=[Optional()])
     responsavel = StringField("Responsável", validators=[Optional(), Length(max=120)])
     local = StringField("Local", validators=[Optional(), Length(max=150)])
+    submit = SubmitField("Salvar")
+
+
+class NormaRegulamentadoraForm(FlaskForm):
+    numero = StringField("Número (ex.: NR-6)", validators=[DataRequired(), Length(max=10)])
+    titulo = StringField("Título", validators=[DataRequired(), Length(max=200)])
+    aplicavel = BooleanField("Aplicável à empresa", default=True)
+    link_oficial = StringField("Link para o texto oficial", validators=[Optional(), Length(max=255)])
+    observacao = TextAreaField("Observação", validators=[Optional()])
+    submit = SubmitField("Salvar")
+
+
+class ItemConformidadeNRForm(FlaskForm):
+    descricao = TextAreaField("Item de conformidade", validators=[DataRequired()])
+    status = SelectField(
+        "Status", choices=[(s, s) for s in STATUS_CONFORMIDADE], validators=[DataRequired()]
+    )
+    responsavel = StringField("Responsável", validators=[Optional(), Length(max=120)])
+    prazo = DateField("Prazo", validators=[Optional()])
+    observacao = TextAreaField("Observação", validators=[Optional()])
     submit = SubmitField("Salvar")

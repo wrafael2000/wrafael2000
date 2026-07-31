@@ -16,7 +16,55 @@ livremente pela empresa.
 """
 
 from .extensions import db
-from .models import Pergunta, Questionario
+from .models import NormaRegulamentadora, Pergunta, Questionario
+
+# Números e títulos das NRs vigentes no Brasil. Lista mantida manualmente:
+# não inclui NR-2 e NR-27 (revogadas). Números a partir do NR-37 não estão
+# incluídos por falta de confiança na exatidão do título — confira a lista
+# completa e atualizada em:
+# https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/seguranca-e-saude-no-trabalho/normas-regulamentadoras
+# antes de usar esta biblioteca para fins de auditoria/compliance.
+LINK_PORTAL_NRS = (
+    "https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/"
+    "seguranca-e-saude-no-trabalho/normas-regulamentadoras"
+)
+
+NORMAS_REGULAMENTADORAS = [
+    ("NR-1", "Disposições Gerais e Gerenciamento de Riscos Ocupacionais"),
+    ("NR-3", "Embargo e Interdição"),
+    ("NR-4", "Serviços Especializados em Engenharia de Segurança e em Medicina do Trabalho"),
+    ("NR-5", "Comissão Interna de Prevenção de Acidentes e de Assédio (CIPA)"),
+    ("NR-6", "Equipamento de Proteção Individual (EPI)"),
+    ("NR-7", "Programa de Controle Médico de Saúde Ocupacional (PCMSO)"),
+    ("NR-8", "Edificações"),
+    ("NR-9", "Avaliação e Controle das Exposições Ocupacionais a Agentes Físicos, Químicos e Biológicos"),
+    ("NR-10", "Segurança em Instalações e Serviços em Eletricidade"),
+    ("NR-11", "Transporte, Movimentação, Armazenagem e Manuseio de Materiais"),
+    ("NR-12", "Segurança no Trabalho em Máquinas e Equipamentos"),
+    ("NR-13", "Caldeiras, Vasos de Pressão e Tubulações"),
+    ("NR-14", "Fornos"),
+    ("NR-15", "Atividades e Operações Insalubres"),
+    ("NR-16", "Atividades e Operações Perigosas"),
+    ("NR-17", "Ergonomia"),
+    ("NR-18", "Segurança e Saúde no Trabalho na Indústria da Construção"),
+    ("NR-19", "Explosivos"),
+    ("NR-20", "Segurança e Saúde no Trabalho com Inflamáveis e Combustíveis"),
+    ("NR-21", "Trabalho a Céu Aberto"),
+    ("NR-22", "Segurança e Saúde Ocupacional na Mineração"),
+    ("NR-23", "Proteção Contra Incêndios"),
+    ("NR-24", "Condições Sanitárias e de Conforto nos Locais de Trabalho"),
+    ("NR-25", "Resíduos Industriais"),
+    ("NR-26", "Sinalização de Segurança"),
+    ("NR-28", "Fiscalização e Penalidades"),
+    ("NR-29", "Segurança e Saúde no Trabalho Portuário"),
+    ("NR-30", "Segurança e Saúde no Trabalho Aquaviário"),
+    ("NR-31", "Segurança e Saúde no Trabalho na Agricultura, Pecuária, Silvicultura, Exploração Florestal e Aquicultura"),
+    ("NR-32", "Segurança e Saúde no Trabalho em Serviços de Saúde"),
+    ("NR-33", "Segurança e Saúde nos Trabalhos em Espaços Confinados"),
+    ("NR-34", "Condições e Meio Ambiente de Trabalho na Indústria da Construção, Reparação e Desmonte Naval"),
+    ("NR-35", "Trabalho em Altura"),
+    ("NR-36", "Segurança e Saúde no Trabalho em Empresas de Abate e Processamento de Carnes e Derivados"),
+]
 
 HSE_IT = {
     "tipo": "HSE-IT",
@@ -201,3 +249,20 @@ def seed_questionarios():
 
     db.session.commit()
     return criados
+
+
+def seed_normas_regulamentadoras():
+    """Cria o catálogo de NRs se ainda não existir (idempotente)."""
+    criadas = []
+    for numero, titulo in NORMAS_REGULAMENTADORAS:
+        if NormaRegulamentadora.query.filter_by(numero=numero).first():
+            continue
+        db.session.add(
+            NormaRegulamentadora(
+                numero=numero, titulo=titulo, aplicavel=True, link_oficial=LINK_PORTAL_NRS
+            )
+        )
+        criadas.append(numero)
+
+    db.session.commit()
+    return criadas
