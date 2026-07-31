@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titulo %}Pesquisa encerrada{% endblock %}
+{% block conteudo %}
+<div class="card card-centered">
+  <h1>Pesquisa indisponível</h1>
+  <p class="dica">
+    A pesquisa "{{ aplicacao.titulo }}" está encerrada ou fora do período de resposta.
+  </p>
+</div>
+{% endblock %}

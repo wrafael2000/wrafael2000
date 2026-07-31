@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block titulo %}CIPA - Mandatos - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>CIPA — Mandatos</h1>
+  <a href="{{ url_for('cipa.novo_mandato') }}" class="botao">+ Novo mandato</a>
+</div>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Período</th>
+      <th>Status</th>
+      <th>Membros</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for mandato in mandatos %}
+    <tr>
+      <td>{{ mandato.data_inicio.strftime("%d/%m/%Y") }} a {{ mandato.data_fim.strftime("%d/%m/%Y") }}</td>
+      <td>
+        {% if mandato.ativo %}
+          <span class="badge badge-sucesso">Ativo</span>
+        {% else %}
+          <span class="badge badge-neutro">Encerrado</span>
+        {% endif %}
+      </td>
+      <td>{{ mandato.membros|length }}</td>
+      <td class="acoes">
+        <a href="{{ url_for('cipa.ver_mandato', mandato_id=mandato.id) }}">Ver / gerenciar</a>
+        <form method="post" action="{{ url_for('cipa.alternar_status_mandato', mandato_id=mandato.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">{{ "Encerrar" if mandato.ativo else "Reabrir" }}</button>
+        </form>
+        <form method="post" action="{{ url_for('cipa.excluir_mandato', mandato_id=mandato.id) }}"
+              onsubmit="return confirm('Remover este mandato e todos os seus membros/atas?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">Nenhum mandato cadastrado ainda.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

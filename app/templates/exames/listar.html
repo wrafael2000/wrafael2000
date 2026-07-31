@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block titulo %}Exames (ASO) - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Exames (ASO)</h1>
+  <a href="{{ url_for('exames.novo') }}" class="botao">+ Novo exame</a>
+</div>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Funcionário</th>
+      <th>Tipo</th>
+      <th>Data</th>
+      <th>Validade</th>
+      <th>Resultado</th>
+      <th>Status</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for exame in exames %}
+    <tr>
+      <td>{{ exame.funcionario.nome }}</td>
+      <td>{{ exame.tipo }}</td>
+      <td>{{ exame.data_exame.strftime("%d/%m/%Y") }}</td>
+      <td>{{ exame.data_validade.strftime("%d/%m/%Y") if exame.data_validade else "-" }}</td>
+      <td>
+        {% if exame.resultado == "Inapto" %}
+          <span class="badge badge-perigo">Inapto</span>
+        {% else %}
+          <span class="badge badge-sucesso">Apto</span>
+        {% endif %}
+      </td>
+      <td>
+        {% if exame.status == "vencido" %}
+          <span class="badge badge-perigo">Vencido</span>
+        {% elif exame.status == "vencendo" %}
+          <span class="badge badge-alerta">Vencendo</span>
+        {% elif exame.status == "valido" %}
+          <span class="badge badge-sucesso">Válido</span>
+        {% else %}
+          <span class="badge badge-neutro">Sem validade</span>
+        {% endif %}
+      </td>
+      <td class="acoes">
+        <a href="{{ url_for('exames.editar', exame_id=exame.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('exames.excluir', exame_id=exame.id) }}"
+              onsubmit="return confirm('Remover este exame?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7">Nenhum exame registrado ainda.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

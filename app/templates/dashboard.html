@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block titulo %}Dashboard - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Dashboard</h1>
+  <a href="{{ url_for('main.relatorio_geral_pdf') }}" class="botao-secundario">Baixar relatório geral (PDF)</a>
+</div>
+
+<div class="cards-resumo">
+  <div class="card-resumo">
+    <span class="numero">{{ total_funcionarios }}</span>
+    <span class="rotulo">Funcionários ativos</span>
+  </div>
+  <div class="card-resumo">
+    <span class="numero">{{ total_setores }}</span>
+    <span class="rotulo">Setores cadastrados</span>
+  </div>
+  <div class="card-resumo {{ 'card-resumo-alerta' if acidentes_recentes }}">
+    <span class="numero">{{ acidentes_recentes }}</span>
+    <span class="rotulo">Acidentes nos últimos 30 dias</span>
+  </div>
+  <div class="card-resumo {{ 'card-resumo-alerta' if itens_vencendo }}">
+    <span class="numero">{{ itens_vencendo }}</span>
+    <span class="rotulo">Itens vencendo (30 dias)</span>
+  </div>
+  <div class="card-resumo {{ 'card-resumo-perigo' if itens_vencidos }}">
+    <span class="numero">{{ itens_vencidos }}</span>
+    <span class="rotulo">Itens vencidos</span>
+  </div>
+</div>
+
+<h2>Funcionários por setor</h2>
+<table class="tabela">
+  <thead>
+    <tr><th>Setor</th><th>Funcionários ativos</th></tr>
+  </thead>
+  <tbody>
+    {% for item in funcionarios_por_setor %}
+    <tr><td>{{ item.setor }}</td><td>{{ item.quantidade }}</td></tr>
+    {% else %}
+    <tr><td colspan="2">Nenhum funcionário ativo cadastrado ainda.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Resumo geral</h2>
+<div class="cards-resumo">
+  <div class="card-resumo">
+    <span class="numero">{{ total_acidentes }}</span>
+    <span class="rotulo">Acidentes/incidentes (total)</span>
+  </div>
+  <div class="card-resumo">
+    <span class="numero">{{ total_epis_entregues }}</span>
+    <span class="rotulo">Entregas de EPI registradas</span>
+  </div>
+  <div class="card-resumo">
+    <span class="numero">{{ total_exames_realizados }}</span>
+    <span class="rotulo">Exames (ASO) realizados</span>
+  </div>
+  <div class="card-resumo">
+    <span class="numero">{{ total_treinamentos_realizados }}</span>
+    <span class="rotulo">Treinamentos realizados</span>
+  </div>
+</div>
+
+<h2>Planos de ação psicossociais</h2>
+<div class="cards-resumo">
+  <div class="card-resumo">
+    <span class="numero">{{ planos_acao_pendentes }}</span>
+    <span class="rotulo">Pendentes</span>
+  </div>
+  <div class="card-resumo">
+    <span class="numero">{{ planos_acao_em_andamento }}</span>
+    <span class="rotulo">Em andamento</span>
+  </div>
+  <div class="card-resumo">
+    <span class="numero">{{ planos_acao_concluidos }}</span>
+    <span class="rotulo">Concluídos</span>
+  </div>
+</div>
+
+<h2>Próximos vencimentos</h2>
+<p class="dica">
+  Reúne EPIs entregues, exames (ASO), documentos (PCMSO, PGR...) e
+  treinamentos vencidos ou que vencem nos próximos 30 dias, ordenados pelo
+  mais urgente.
+</p>
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Tipo</th>
+      <th>Descrição</th>
+      <th>Vencimento</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for alerta in alertas %}
+    <tr>
+      <td>{{ alerta.tipo }}</td>
+      <td>{{ alerta.descricao }}</td>
+      <td>{{ alerta.vencimento.strftime("%d/%m/%Y") }}</td>
+      <td>
+        {% if alerta.status == "vencido" %}
+          <span class="badge badge-perigo">Vencido</span>
+        {% else %}
+          <span class="badge badge-alerta">Vencendo</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">Nenhum item vencido ou vencendo no momento.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

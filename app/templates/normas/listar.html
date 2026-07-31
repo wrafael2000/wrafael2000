@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block titulo %}Normas Regulamentadoras - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Biblioteca de Normas Regulamentadoras (NRs)</h1>
+  <a href="{{ url_for('normas.nova') }}" class="botao">+ Nova norma</a>
+</div>
+<p class="dica">
+  Catálogo e checklist de conformidade — não é o texto legal completo de cada
+  norma. Confira sempre a versão oficial e atualizada no
+  <a href="https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/seguranca-e-saude-no-trabalho/normas-regulamentadoras" target="_blank" rel="noopener">
+    portal do governo
+  </a> antes de usar para fins de auditoria.
+</p>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Número</th>
+      <th>Título</th>
+      <th>Aplicável</th>
+      <th>Itens de conformidade</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for norma in normas %}
+    <tr>
+      <td>{{ norma.numero }}</td>
+      <td>{{ norma.titulo }}</td>
+      <td>
+        {% if norma.aplicavel %}
+          <span class="badge badge-sucesso">Sim</span>
+        {% else %}
+          <span class="badge badge-neutro">Não</span>
+        {% endif %}
+      </td>
+      <td>{{ norma.itens_conformidade|length }}</td>
+      <td class="acoes">
+        <a href="{{ url_for('normas.ver', norma_id=norma.id) }}">Ver / checklist</a>
+        <form method="post" action="{{ url_for('normas.excluir', norma_id=norma.id) }}"
+              onsubmit="return confirm('Remover esta norma e seu checklist?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">Nenhuma norma cadastrada. Rode <code>flask seed-normas</code> para criar o catálogo padrão.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

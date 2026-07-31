@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titulo %}Questionários - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Questionários psicossociais</h1>
+  <a href="{{ url_for('questionarios.novo') }}" class="botao">+ Novo questionário</a>
+</div>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Tipo</th>
+      <th>Nome</th>
+      <th>Perguntas</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for questionario in questionarios %}
+    <tr>
+      <td>{{ questionario.tipo }}</td>
+      <td>{{ questionario.nome }}</td>
+      <td>{{ questionario.perguntas|length }}</td>
+      <td class="acoes">
+        <a href="{{ url_for('questionarios.ver', questionario_id=questionario.id) }}">Ver / editar perguntas</a>
+        <form method="post" action="{{ url_for('questionarios.excluir', questionario_id=questionario.id) }}"
+              onsubmit="return confirm('Remover este questionário e todas as suas perguntas?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">Nenhum questionário cadastrado. Rode <code>flask seed-questionarios</code> para criar os padrão.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

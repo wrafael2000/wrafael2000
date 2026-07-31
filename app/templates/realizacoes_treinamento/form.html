@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} - Gestão de SST{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+<form method="post" novalidate class="card">
+  {{ form.hidden_tag() }}
+  <div class="campo">
+    {{ form.funcionario_id.label }}
+    {{ form.funcionario_id(class_="input") }}
+    {% for erro in form.funcionario_id.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.treinamento_id.label }}
+    {{ form.treinamento_id(class_="input") }}
+    {% for erro in form.treinamento_id.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.data_realizacao.label }}
+    {{ form.data_realizacao(class_="input") }}
+    {% for erro in form.data_realizacao.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.instrutor.label }}
+    {{ form.instrutor(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.observacao.label }}
+    {{ form.observacao(class_="input") }}
+  </div>
+  {{ form.submit(class_="botao") }}
+  <a href="{{ url_for('realizacoes_treinamento.listar') }}" class="botao-secundario">Cancelar</a>
+</form>
+{% endblock %}

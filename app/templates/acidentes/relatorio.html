@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block titulo %}Relatório de Acidentes - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Relatório de acidentes</h1>
+  <div>
+    <a href="{{ url_for('acidentes.relatorio_pdf') }}" class="botao-secundario">Baixar PDF</a>
+    <a href="{{ url_for('acidentes.listar') }}" class="botao-secundario">Voltar à lista</a>
+  </div>
+</div>
+
+<div class="cards-resumo">
+  <div class="card-resumo">
+    <span class="numero">{{ total }}</span>
+    <span class="rotulo">Total de ocorrências</span>
+  </div>
+  <div class="card-resumo">
+    <span class="numero">{{ total_dias_afastamento }}</span>
+    <span class="rotulo">Dias de afastamento (total)</span>
+  </div>
+</div>
+
+<h2>Por gravidade</h2>
+<table class="tabela">
+  <thead><tr><th>Gravidade</th><th>Quantidade</th></tr></thead>
+  <tbody>
+    {% for gravidade, quantidade in por_gravidade.items() %}
+    <tr><td>{{ gravidade }}</td><td>{{ quantidade }}</td></tr>
+    {% else %}
+    <tr><td colspan="2">Sem dados.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Por tipo</h2>
+<table class="tabela">
+  <thead><tr><th>Tipo</th><th>Quantidade</th></tr></thead>
+  <tbody>
+    {% for tipo, quantidade in por_tipo.items() %}
+    <tr><td>{{ tipo }}</td><td>{{ quantidade }}</td></tr>
+    {% else %}
+    <tr><td colspan="2">Sem dados.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Por mês (últimos 12 meses)</h2>
+<table class="tabela">
+  <thead><tr><th>Mês</th><th>Quantidade</th></tr></thead>
+  <tbody>
+    {% for mes, quantidade in por_mes %}
+    <tr><td>{{ mes }}</td><td>{{ quantidade }}</td></tr>
+    {% else %}
+    <tr><td colspan="2">Sem dados no período.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

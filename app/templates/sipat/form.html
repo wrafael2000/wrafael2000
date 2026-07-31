@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} - Gestão de SST{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+<form method="post" novalidate class="card">
+  {{ form.hidden_tag() }}
+  <div class="campo">
+    {{ form.titulo.label }}
+    {{ form.titulo(class_="input") }}
+    {% for erro in form.titulo.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.tema.label }}
+    {{ form.tema(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.data_inicio.label }}
+    {{ form.data_inicio(class_="input") }}
+    {% for erro in form.data_inicio.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.data_fim.label }}
+    {{ form.data_fim(class_="input") }}
+    {% for erro in form.data_fim.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  {{ form.submit(class_="botao") }}
+  <a href="{{ url_for('sipat.listar') }}" class="botao-secundario">Cancelar</a>
+</form>
+{% endblock %}

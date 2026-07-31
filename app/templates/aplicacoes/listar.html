@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block titulo %}Aplicações - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Aplicações de pesquisa</h1>
+  <a href="{{ url_for('aplicacoes.nova') }}" class="botao">+ Nova aplicação</a>
+</div>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Título</th>
+      <th>Questionário</th>
+      <th>Início</th>
+      <th>Encerramento</th>
+      <th>Status</th>
+      <th>Respostas</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for aplicacao in aplicacoes %}
+    <tr>
+      <td>{{ aplicacao.titulo }}</td>
+      <td>{{ aplicacao.questionario.nome }}</td>
+      <td>{{ aplicacao.data_inicio.strftime("%d/%m/%Y") }}</td>
+      <td>{{ aplicacao.data_fim.strftime("%d/%m/%Y") if aplicacao.data_fim else "-" }}</td>
+      <td>
+        {% if aplicacao.disponivel %}
+          <span class="badge badge-sucesso">Aberta</span>
+        {% else %}
+          <span class="badge badge-neutro">Encerrada</span>
+        {% endif %}
+      </td>
+      <td>{{ aplicacao.envios|length }}</td>
+      <td class="acoes">
+        <a href="{{ url_for('aplicacoes.resultados', aplicacao_id=aplicacao.id) }}">Resultados</a>
+        <form method="post" action="{{ url_for('aplicacoes.alternar_status', aplicacao_id=aplicacao.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">
+            {{ "Encerrar" if aplicacao.ativa else "Reabrir" }}
+          </button>
+        </form>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="7" class="link-publico">
+        Link público para respostas anônimas:
+        <code>{{ url_for('pesquisa_publica.responder', token=aplicacao.token_publico, _external=True) }}</code>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7">Nenhuma aplicação criada ainda.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

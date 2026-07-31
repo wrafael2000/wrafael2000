@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Gestão de SST{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  {% if current_user.is_authenticated %}
+  <nav class="navbar">
+    <div class="navbar-brand">Gestão de SST</div>
+    <div class="navbar-links">
+      <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('setores.listar') }}">Setores</a>
+      <a href="{{ url_for('funcionarios.listar') }}">Funcionários</a>
+      <a href="{{ url_for('epis.listar') }}">EPIs</a>
+      <a href="{{ url_for('entregas_epi.listar') }}">Entregas de EPI</a>
+      <a href="{{ url_for('acidentes.listar') }}">Acidentes</a>
+      <a href="{{ url_for('exames.listar') }}">Exames (ASO)</a>
+      <a href="{{ url_for('documentos.listar') }}">Documentos</a>
+      <a href="{{ url_for('treinamentos.listar') }}">Treinamentos</a>
+      <a href="{{ url_for('realizacoes_treinamento.listar') }}">Certificações</a>
+      <a href="{{ url_for('questionarios.listar') }}">Questionários</a>
+      <a href="{{ url_for('aplicacoes.listar') }}">Pesquisas</a>
+      <a href="{{ url_for('cipa.listar_mandatos') }}">CIPA</a>
+      <a href="{{ url_for('reunioes_cipa.listar') }}">Atas CIPA</a>
+      <a href="{{ url_for('sipat.listar') }}">SIPAT</a>
+      <a href="{{ url_for('normas.listar') }}">NRs</a>
+      <a href="{{ url_for('auth.logout') }}">Sair ({{ current_user.nome }})</a>
+    </div>
+  </nav>
+  {% endif %}
+
+  <main class="container">
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+      {% if mensagens %}
+        {% for categoria, mensagem in mensagens %}
+          <div class="alert alert-{{ categoria }}">{{ mensagem }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block conteudo %}{% endblock %}
+  </main>
+</body>
+</html>

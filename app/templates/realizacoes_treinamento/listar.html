@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block titulo %}Realizações de treinamento - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Realizações de treinamento</h1>
+  <a href="{{ url_for('realizacoes_treinamento.nova') }}" class="botao">+ Nova realização</a>
+</div>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Funcionário</th>
+      <th>Treinamento</th>
+      <th>Realizado em</th>
+      <th>Validade</th>
+      <th>Status</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for realizacao in realizacoes %}
+    <tr>
+      <td>{{ realizacao.funcionario.nome }}</td>
+      <td>{{ realizacao.treinamento.nome }}</td>
+      <td>{{ realizacao.data_realizacao.strftime("%d/%m/%Y") }}</td>
+      <td>{{ realizacao.data_validade.strftime("%d/%m/%Y") if realizacao.data_validade else "-" }}</td>
+      <td>
+        {% if realizacao.status == "vencido" %}
+          <span class="badge badge-perigo">Vencido</span>
+        {% elif realizacao.status == "vencendo" %}
+          <span class="badge badge-alerta">Vencendo</span>
+        {% elif realizacao.status == "valido" %}
+          <span class="badge badge-sucesso">Válido</span>
+        {% else %}
+          <span class="badge badge-neutro">Sem validade</span>
+        {% endif %}
+      </td>
+      <td class="acoes">
+        <a href="{{ url_for('realizacoes_treinamento.editar', realizacao_id=realizacao.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('realizacoes_treinamento.excluir', realizacao_id=realizacao.id) }}"
+              onsubmit="return confirm('Remover esta realização?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">Nenhuma realização registrada ainda.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
