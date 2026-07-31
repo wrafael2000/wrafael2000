@@ -18,9 +18,8 @@ livremente pela empresa.
 from .extensions import db
 from .models import NormaRegulamentadora, Pergunta, Questionario
 
-# Números e títulos das NRs vigentes no Brasil. Lista mantida manualmente:
-# não inclui NR-2 e NR-27 (revogadas). Números a partir do NR-37 não estão
-# incluídos por falta de confiança na exatidão do título — confira a lista
+# Números e títulos das NRs vigentes no Brasil (NR-1 a NR-38). Lista mantida
+# manualmente: não inclui NR-2 e NR-27 (revogadas). Confira sempre a lista
 # completa e atualizada em:
 # https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/seguranca-e-saude-no-trabalho/normas-regulamentadoras
 # antes de usar esta biblioteca para fins de auditoria/compliance.
@@ -64,6 +63,8 @@ NORMAS_REGULAMENTADORAS = [
     ("NR-34", "Condições e Meio Ambiente de Trabalho na Indústria da Construção, Reparação e Desmonte Naval"),
     ("NR-35", "Trabalho em Altura"),
     ("NR-36", "Segurança e Saúde no Trabalho em Empresas de Abate e Processamento de Carnes e Derivados"),
+    ("NR-37", "Segurança e Saúde em Plataformas de Petróleo"),
+    ("NR-38", "Segurança e Saúde no Trabalho nas Atividades de Limpeza Urbana e Manejo de Resíduos Sólidos"),
 ]
 
 HSE_IT = {

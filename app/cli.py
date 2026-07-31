@@ -34,7 +34,7 @@ def registrar_comandos(app):
 
     @app.cli.command("seed-normas")
     def seed_normas_command():
-        """Cria o catálogo padrão de Normas Regulamentadoras (NR-1 a NR-36)."""
+        """Cria o catálogo padrão de Normas Regulamentadoras (NR-1 a NR-38)."""
         criadas = seed_normas_regulamentadoras()
         if criadas:
             click.echo(f"Normas criadas: {', '.join(criadas)}")

@@ -155,7 +155,7 @@ primeira execução.
   (título, data, horário, responsável, local)
 
 **Fase 9 — Biblioteca de Normas Regulamentadoras (NRs)**
-- Catálogo de NRs (`flask seed-normas` popula NR-1 a NR-36, exceto NR-2 e
+- Catálogo de NRs (`flask seed-normas` popula NR-1 a NR-38, exceto NR-2 e
   NR-27, que foram revogadas). **Importante:** os números e títulos foram
   digitados manualmente e podem estar desatualizados — confira sempre a
   lista oficial e vigente no
