@@ -21,12 +21,20 @@ para ideias de continuação.
 | Relatórios em PDF | **ReportLab** | Geração de PDF sem dependências externas de sistema |
 | Front-end | HTML + CSS simples (sem framework JS por enquanto) | Foco em aprender o backend primeiro |
 
+## Quero só abrir o programa, não mexer no código
+
+Se você não vai programar, pule para a seção
+["Versão desktop (clique e use)"](#versão-desktop-clique-e-use) mais abaixo —
+é bem mais simples que as instruções de desenvolvimento a seguir.
+
 ## Estrutura do projeto
 
 ```
 .
-├── run.py              # ponto de entrada da aplicação
-├── config.py            # configurações (lidas de variáveis de ambiente)
+├── run.py              # ponto de entrada da aplicação (uso via terminal/desenvolvimento)
+├── desktop_run.py       # ponto de entrada da versão desktop (.exe, "clique e use")
+├── build_windows.bat    # gera o .exe a partir do desktop_run.py (rodar 1x no Windows)
+├── config.py             # configurações (lidas de variáveis de ambiente)
 ├── requirements.txt
 ├── app/
 │   ├── __init__.py      # application factory (cria e configura o Flask app)
@@ -68,6 +76,38 @@ python run.py
 ```
 
 Acesse **http://127.0.0.1:5000** e faça login com o usuário criado no passo 4.
+
+## Versão desktop (clique e use)
+
+Para quem só quer usar o sistema, sem mexer com terminal toda vez: dá para
+gerar um único arquivo `.exe` (Windows) que abre o programa sozinho, sem
+precisar instalar Python, ativar ambiente virtual nem digitar comandos.
+
+**Isso exige um passo único de preparação** (só uma vez, e ainda usa o
+terminal nessa etapa — depois disso, nunca mais):
+
+1. Baixe/clone este repositório no seu computador.
+2. Instale o [Python](https://www.python.org/downloads/) se ainda não tiver
+   (marque "Add Python to PATH" durante a instalação).
+3. Dentro da pasta do projeto, dê **dois cliques** no arquivo
+   `build_windows.bat`.
+4. Aguarde — ele vai instalar tudo sozinho e gerar o programa. Pode levar
+   alguns minutos.
+5. Ao final, vai aparecer o arquivo
+   `dist\SST-Saude-Seguranca-Trabalho.exe`. Copie **só esse arquivo** para
+   onde quiser (ex.: Área de Trabalho).
+
+**A partir daí, é só clicar duas vezes nesse `.exe` toda vez que quiser usar
+o sistema.** Ele abre uma janela preta (deixe aberta enquanto usa o
+programa) e o navegador sozinho, em `http://127.0.0.1:5000`.
+
+No primeiro uso, a própria janela do programa vai perguntar o nome, e-mail e
+senha do administrador — é o seu login. Nas próximas vezes, ele pula direto
+para a tela de login do sistema.
+
+Os dados ficam salvos numa pasta `dados` ao lado do `.exe` — não apague essa
+pasta, é onde estão os cadastros. Para levar o sistema para outro
+computador, copie o `.exe` **e** a pasta `dados` juntos.
 
 O banco de dados SQLite é criado automaticamente em `instance/sst.db` na
 primeira execução.
