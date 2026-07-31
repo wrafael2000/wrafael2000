@@ -444,6 +444,110 @@ def gerar_pdf_ltcat(ltcat):
     return buffer
 
 
+_AVISO_PPP = (
+    "Este documento foi gerado automaticamente pelo sistema a partir dos dados "
+    "cadastrados e não substitui a conferência do histórico completo do "
+    "funcionário (admissão, funções exercidas, agentes nocivos e responsáveis "
+    "técnicos) por RH, engenheiro de segurança do trabalho e médico do "
+    "trabalho, conforme exige a legislação previdenciária, antes de emitir o "
+    "PPP oficial junto ao eSocial/INSS."
+)
+
+
+def gerar_pdf_ppp(ppp):
+    buffer = io.BytesIO()
+    doc, elementos = _novo_documento(
+        buffer, f"Perfil Profissiográfico Previdenciário (PPP) - {ppp.funcionario.nome}"
+    )
+
+    elementos.append(_paragrafo_livre(_AVISO_PPP, _estilo_aviso))
+
+    funcionario = ppp.funcionario
+    elementos.append(Paragraph("Dados do funcionário", _estilo_secao))
+    elementos.append(
+        _tabela(
+            ["Campo", "Valor"],
+            [
+                ["Nome", funcionario.nome],
+                ["Cargo atual", funcionario.cargo or "-"],
+                ["Setor atual", funcionario.setor.nome],
+                ["Data de admissão", funcionario.data_admissao.strftime("%d/%m/%Y") if funcionario.data_admissao else "-"],
+            ],
+            larguras=[5 * cm, 11 * cm],
+        )
+    )
+
+    elementos.append(Paragraph("Dados de emissão", _estilo_secao))
+    linhas_emissao = [
+        ["Data de emissão", ppp.data_emissao.strftime("%d/%m/%Y")],
+        ["Responsável pela emissão", ppp.responsavel_emissao],
+    ]
+    if ppp.responsavel_tecnico_seguranca:
+        valor = ppp.responsavel_tecnico_seguranca
+        if ppp.responsavel_tecnico_seguranca_registro:
+            valor += f" ({ppp.responsavel_tecnico_seguranca_registro})"
+        linhas_emissao.append(["Responsável técnico de segurança", valor])
+    if ppp.medico_coordenador:
+        valor = ppp.medico_coordenador
+        if ppp.medico_coordenador_crm:
+            valor += f" ({ppp.medico_coordenador_crm})"
+        linhas_emissao.append(["Médico coordenador", valor])
+    elementos.append(_tabela(["Campo", "Valor"], linhas_emissao, larguras=[5 * cm, 11 * cm]))
+
+    if ppp.observacoes:
+        elementos.append(Paragraph("Observações", _estilo_secao))
+        elementos.append(_paragrafo_livre(ppp.observacoes))
+
+    elementos.append(Paragraph("Histórico de exposição a agentes nocivos", _estilo_secao))
+    if ppp.exposicoes:
+        elementos.append(
+            _tabela(
+                ["Período", "Setor", "Função", "Agente/tipo", "Intensidade", "EPI eficaz"],
+                [
+                    [
+                        f"{exp.data_inicio.strftime('%d/%m/%Y')} a "
+                        f"{exp.data_fim.strftime('%d/%m/%Y') if exp.data_fim else 'atual'}",
+                        exp.setor.nome,
+                        exp.funcao,
+                        f"{exp.agente_nocivo} ({exp.tipo_agente})",
+                        exp.intensidade_concentracao or "-",
+                        exp.epi_eficaz,
+                    ]
+                    for exp in ppp.exposicoes
+                ],
+                larguras=[3.2 * cm, 2 * cm, 2.3 * cm, 4.3 * cm, 2.2 * cm, 2 * cm],
+            )
+        )
+    else:
+        elementos.append(Paragraph("Nenhum período de exposição cadastrado.", _estilo_texto))
+
+    elementos.append(Paragraph("Exames ocupacionais (ASO) do funcionário", _estilo_secao))
+    exames = Exame.query.filter_by(funcionario_id=funcionario.id).order_by(Exame.data_exame.desc()).all()
+    if exames:
+        elementos.append(
+            _tabela(
+                ["Tipo", "Data", "Resultado", "Médico", "Validade"],
+                [
+                    [
+                        exame.tipo,
+                        exame.data_exame.strftime("%d/%m/%Y"),
+                        exame.resultado,
+                        exame.medico or "-",
+                        exame.data_validade.strftime("%d/%m/%Y") if exame.data_validade else "-",
+                    ]
+                    for exame in exames
+                ],
+                larguras=[3.5 * cm, 2.5 * cm, 2.5 * cm, 4 * cm, 2.5 * cm],
+            )
+        )
+    else:
+        elementos.append(Paragraph("Nenhum exame (ASO) registrado para este funcionário.", _estilo_texto))
+
+    doc.build(elementos)
+    buffer.seek(0)
+    return buffer
+
+
 def gerar_pdf_relatorio_acidentes(dados):
     buffer = io.BytesIO()
     doc, elementos = _novo_documento(buffer, "Relatório de Acidentes e Incidentes")

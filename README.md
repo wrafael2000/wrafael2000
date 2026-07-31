@@ -323,12 +323,25 @@ pergunta o e-mail e a nova senha.
   confirmadas por um engenheiro de segurança do trabalho, e também é
   salvo/atualizado em Documentos SST (novo tipo "LTCAT" adicionado ao
   cadastro de documentos)
+- **PPP — Perfil Profissiográfico Previdenciário** (menu `PPP`, tela
+  própria — diferente de PGR/PCMSO/LTCAT, o PPP é por funcionário e não
+  entra em Documentos SST): você escolhe o funcionário, informa a data de
+  emissão, o responsável pela emissão e, opcionalmente, o responsável
+  técnico de segurança e o médico coordenador. Depois cadastra o histórico
+  de exposição a agentes nocivos — setor, função, período (início/fim),
+  tipo e nome do agente, intensidade/concentração e se o EPI neutraliza o
+  agente (consulte o LTCAT da empresa para preencher esses dados
+  corretamente). O PDF gerado inclui esse histórico mais os exames (ASO)
+  já registrados para aquele funcionário — dado real, puxado
+  automaticamente — com aviso de que o histórico completo precisa ser
+  conferido por RH, engenheiro de segurança e médico do trabalho antes de
+  emitir o PPP oficial pelo eSocial
 - **Sobre o gerador**: em todos os casos, o sistema só monta o documento no
   layout padrão com os dados já cadastrados (empresa, setores,
   funcionários, exames) — o conteúdo técnico (temas, riscos, medidas de
-  controle, diretrizes clínicas, medições) é sempre digitado por quem está
-  usando o sistema. Isso vale também para o próximo gerador (PPP), que
-  será adicionado em uma próxima etapa
+  controle, diretrizes clínicas, medições, históricos de exposição) é
+  sempre digitado por quem está usando o sistema. Com PPP, o conjunto de
+  seis geradores pedido (PGR, PCMSO, LTCAT, PPP, DDS, APR) está completo
 
 ## Próximos passos (ideias para continuar)
 

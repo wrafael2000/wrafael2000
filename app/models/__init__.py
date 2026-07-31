@@ -14,6 +14,7 @@ from .norma_regulamentadora import ItemConformidadeNR, NormaRegulamentadora
 from .pcmso import ItemPcmso, Pcmso
 from .pgr import ItemRiscoPgr, Pgr
 from .plano_acao_psicossocial import PlanoAcaoPsicossocial
+from .ppp import Ppp, PppExposicao
 from .questionario import Pergunta, Questionario
 from .realizacao_treinamento import RealizacaoTreinamento
 from .reuniao_cipa import ReuniaoCipa
@@ -58,4 +59,6 @@ __all__ = [
     "ItemPcmso",
     "Ltcat",
     "ItemLtcat",
+    "Ppp",
+    "PppExposicao",
 ]

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block titulo %}PPP - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>PPP - Perfil Profissiográfico Previdenciário</h1>
+  <a href="{{ url_for('ppp.novo') }}" class="botao">+ Novo PPP</a>
+</div>
+<p class="dica">
+  O PPP é o histórico de exposição a agentes nocivos de cada funcionário, usado para fins
+  previdenciários (aposentadoria especial, eSocial). Consulte o LTCAT da empresa para
+  preencher os agentes e intensidades corretamente.
+</p>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Funcionário</th>
+      <th>Setor</th>
+      <th>Data de emissão</th>
+      <th>Períodos de exposição</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for registro in registros %}
+    <tr>
+      <td>{{ registro.funcionario.nome }}</td>
+      <td>{{ registro.funcionario.setor.nome }}</td>
+      <td>{{ registro.data_emissao.strftime("%d/%m/%Y") }}</td>
+      <td>{{ registro.exposicoes|length }}</td>
+      <td class="acoes">
+        <a href="{{ url_for('ppp.ver', ppp_id=registro.id) }}">Ver / gerenciar</a>
+        <a href="{{ url_for('ppp.pdf', ppp_id=registro.id) }}">Baixar PDF</a>
+        <form method="post" action="{{ url_for('ppp.excluir', ppp_id=registro.id) }}"
+              onsubmit="return confirm('Remover este PPP e seu histórico de exposição?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">Nenhum PPP cadastrado ainda.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

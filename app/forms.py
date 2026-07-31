@@ -448,6 +448,51 @@ class ItemLtcatForm(FlaskForm):
     submit = SubmitField("Salvar item")
 
 
+class PppForm(FlaskForm):
+    funcionario_id = SelectField("Funcionário", coerce=int, validators=[DataRequired()])
+    data_emissao = DateField("Data de emissão", validators=[DataRequired()])
+    responsavel_emissao = StringField(
+        "Responsável pela emissão (RH, etc.)", validators=[DataRequired(), Length(max=120)]
+    )
+    responsavel_tecnico_seguranca = StringField(
+        "Responsável técnico de segurança (opcional)", validators=[Optional(), Length(max=120)]
+    )
+    responsavel_tecnico_seguranca_registro = StringField(
+        "Registro profissional (CREA, etc.)", validators=[Optional(), Length(max=60)]
+    )
+    medico_coordenador = StringField(
+        "Médico coordenador do PCMSO (opcional)", validators=[Optional(), Length(max=120)]
+    )
+    medico_coordenador_crm = StringField(
+        "CRM do médico coordenador", validators=[Optional(), Length(max=60)]
+    )
+    observacoes = TextAreaField("Observações (opcional)", validators=[Optional()])
+    submit = SubmitField("Salvar")
+
+
+class PppExposicaoForm(FlaskForm):
+    setor_id = SelectField("Setor", coerce=int, validators=[DataRequired()])
+    funcao = StringField("Função exercida no período", validators=[DataRequired(), Length(max=150)])
+    data_inicio = DateField("Início do período", validators=[DataRequired()])
+    data_fim = DateField(
+        "Fim do período",
+        validators=[Optional()],
+        description="Deixe em branco se o funcionário ainda está nessa função.",
+    )
+    tipo_agente = SelectField(
+        "Tipo de agente", choices=[(c, c) for c in CATEGORIAS_AGENTE], validators=[DataRequired()]
+    )
+    agente_nocivo = TextAreaField("Agente nocivo", validators=[DataRequired()])
+    intensidade_concentracao = StringField(
+        "Intensidade/concentração (opcional)", validators=[Optional(), Length(max=80)]
+    )
+    epi_eficaz = SelectField(
+        "EPI neutraliza o agente?", choices=[(e, e) for e in EFICACIA_EPI_EPC], validators=[DataRequired()]
+    )
+    observacoes = TextAreaField("Observações (opcional)", validators=[Optional()])
+    submit = SubmitField("Salvar período")
+
+
 class EsqueciSenhaForm(FlaskForm):
     email = StringField("E-mail", validators=[DataRequired(), Email()])
     codigo_recuperacao = StringField("Código de recuperação", validators=[DataRequired()])

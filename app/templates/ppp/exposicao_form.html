@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} - Gestão de SST{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+<p class="dica">PPP: {{ ppp.funcionario.nome }}</p>
+<form method="post" novalidate class="card card-larga">
+  {{ form.hidden_tag() }}
+  <div class="campo">
+    {{ form.setor_id.label }}
+    {{ form.setor_id(class_="input") }}
+    {% for erro in form.setor_id.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.funcao.label }}
+    {{ form.funcao(class_="input") }}
+    {% for erro in form.funcao.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.data_inicio.label }}
+    {{ form.data_inicio(class_="input") }}
+    {% for erro in form.data_inicio.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.data_fim.label }}
+    {{ form.data_fim(class_="input") }}
+    <small>{{ form.data_fim.description }}</small>
+  </div>
+  <div class="campo">
+    {{ form.tipo_agente.label }}
+    {{ form.tipo_agente(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.agente_nocivo.label }}
+    {{ form.agente_nocivo(class_="input textarea") }}
+    {% for erro in form.agente_nocivo.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.intensidade_concentracao.label }}
+    {{ form.intensidade_concentracao(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.epi_eficaz.label }}
+    {{ form.epi_eficaz(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.observacoes.label }}
+    {{ form.observacoes(class_="input textarea") }}
+  </div>
+  {{ form.submit(class_="botao") }}
+  <a href="{{ url_for('ppp.ver', ppp_id=ppp.id) }}" class="botao-secundario">Cancelar</a>
+</form>
+{% endblock %}

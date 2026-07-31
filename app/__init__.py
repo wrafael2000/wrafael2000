@@ -40,6 +40,7 @@ def create_app(config_class=Config):
         from .routes.pcmso import pcmso_bp
         from .routes.pesquisa_publica import pesquisa_publica_bp
         from .routes.pgr import pgr_bp
+        from .routes.ppp import ppp_bp
         from .routes.questionarios import questionarios_bp
         from .routes.realizacoes_treinamento import realizacoes_treinamento_bp
         from .routes.reunioes_cipa import reunioes_cipa_bp
@@ -71,6 +72,7 @@ def create_app(config_class=Config):
         app.register_blueprint(pgr_bp)
         app.register_blueprint(pcmso_bp)
         app.register_blueprint(ltcat_bp)
+        app.register_blueprint(ppp_bp)
 
         registrar_comandos(app)
 

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} - Gestão de SST{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+<form method="post" novalidate class="card card-larga">
+  {{ form.hidden_tag() }}
+  <div class="campo">
+    {{ form.funcionario_id.label }}
+    {{ form.funcionario_id(class_="input") }}
+    {% for erro in form.funcionario_id.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.data_emissao.label }}
+    {{ form.data_emissao(class_="input") }}
+    {% for erro in form.data_emissao.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.responsavel_emissao.label }}
+    {{ form.responsavel_emissao(class_="input") }}
+    {% for erro in form.responsavel_emissao.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.responsavel_tecnico_seguranca.label }}
+    {{ form.responsavel_tecnico_seguranca(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.responsavel_tecnico_seguranca_registro.label }}
+    {{ form.responsavel_tecnico_seguranca_registro(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.medico_coordenador.label }}
+    {{ form.medico_coordenador(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.medico_coordenador_crm.label }}
+    {{ form.medico_coordenador_crm(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.observacoes.label }}
+    {{ form.observacoes(class_="input textarea") }}
+  </div>
+  {{ form.submit(class_="botao") }}
+  <a href="{{ url_for('ppp.listar') }}" class="botao-secundario">Cancelar</a>
+</form>
+{% endblock %}
