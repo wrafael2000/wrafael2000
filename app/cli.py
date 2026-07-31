@@ -2,6 +2,7 @@ import click
 
 from .extensions import db
 from .models import Usuario
+from .seed_data import seed_questionarios
 
 
 def registrar_comandos(app):
@@ -21,3 +22,12 @@ def registrar_comandos(app):
         db.session.add(usuario)
         db.session.commit()
         click.echo(f"Usuário administrador '{email}' criado com sucesso.")
+
+    @app.cli.command("seed-questionarios")
+    def seed_questionarios_command():
+        """Cria os questionários padrão (HSE-IT, COPSOQ II, CBI, Clima)."""
+        criados = seed_questionarios()
+        if criados:
+            click.echo(f"Questionários criados: {', '.join(criados)}")
+        else:
+            click.echo("Nenhum questionário novo (todos já existiam).")

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block titulo %}{{ aplicacao.titulo }}{% endblock %}
+{% block conteudo %}
+<h1>{{ aplicacao.titulo }}</h1>
+<p class="dica">
+  Esta pesquisa é <strong>anônima</strong>: suas respostas não são vinculadas ao seu nome,
+  apenas (opcionalmente) ao seu setor. Escala: {{ aplicacao.questionario.escala_legenda }}
+</p>
+
+<form method="post" novalidate class="card card-larga">
+  {{ form.hidden_tag() }}
+
+  <div class="campo">
+    {{ form.setor_id.label }}
+    {{ form.setor_id(class_="input") }}
+  </div>
+
+  {% for dimensao, perguntas in grupos.items() %}
+  <h2>{{ dimensao }}</h2>
+  {% for pergunta in perguntas %}
+  <div class="campo pergunta-publica">
+    <label>{{ pergunta.texto }}</label>
+    <div class="escala-radios">
+      {% for valor in range(aplicacao.questionario.escala_min, aplicacao.questionario.escala_max + 1) %}
+      <label class="opcao-radio">
+        <input type="radio" name="pergunta_{{ pergunta.id }}" value="{{ valor }}" required>
+        {{ valor }}
+      </label>
+      {% endfor %}
+    </div>
+    {% if pergunta.id in erros_perguntas %}
+    <span class="erro">Responda esta pergunta.</span>
+    {% endif %}
+  </div>
+  {% endfor %}
+  {% endfor %}
+
+  {{ form.submit(class_="botao") }}
+</form>
+{% endblock %}

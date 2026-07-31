@@ -54,7 +54,10 @@ cp .env.example .env
 export FLASK_APP=run.py          # Windows (PowerShell): $env:FLASK_APP="run.py"
 flask create-admin
 
-# 5. Rodar o servidor de desenvolvimento
+# 5. (Opcional) Criar os questionários padrão de riscos psicossociais
+flask seed-questionarios
+
+# 6. Rodar o servidor de desenvolvimento
 python run.py
 ```
 
@@ -100,15 +103,31 @@ primeira execução.
 - Treinamentos vencidos/vencendo passam a aparecer também na tabela de
   próximos vencimentos do dashboard, junto com EPIs, exames e documentos
 
+**Fase 6 — Riscos psicossociais e clima organizacional**
+- Motor genérico de questionários (`Questionario` → `Pergunta`), reutilizado
+  para os 4 instrumentos: **HSE-IT**, **COPSOQ II**, **CBI (Copenhagen
+  Burnout Inventory** — usado no lugar do MBI, que é proprietário) e
+  **Clima Organizacional** (livremente personalizável)
+- Comando `flask seed-questionarios` cria os 4 questionários com itens
+  representativos por dimensão. **Importante:** os textos são uma versão
+  própria e resumida, não a tradução oficial validada — antes de aplicar
+  formalmente, edite as perguntas (`Questionários → Ver/editar perguntas`)
+  com os itens oficiais do HSE-IT (site do HSE-UK) e do COPSOQ II (grupo
+  COPSOQ Brasil)
+- **Respostas anônimas por padrão**: cada "Aplicação" (rodada de pesquisa)
+  gera um link público (`/responder/<token>`) que não exige login — o
+  funcionário responde sem se identificar, só podendo indicar o setor
+  (opcional). Dado psicossocial é sensível pela LGPD.
+- Tela de resultados mostra médias por dimensão e total de respondentes,
+  **sem inventar pontos de corte de risco** — a classificação (baixo/médio/
+  alto) depende do manual oficial de cada instrumento e deve ser feita por
+  um profissional qualificado (médico do trabalho, psicólogo, engenheiro de
+  segurança)
+- Plano de ação simples vinculado a cada aplicação (ação, responsável,
+  prazo, status)
+
 ## Roadmap (próximas fases)
 
-- **Fase 6 — Riscos psicossociais e clima organizacional**: aplicação dos
-  questionários **HSE-IT** e **COPSOQ II** (uso livre/acadêmico) com plano de
-  ação, pesquisa de clima organizacional personalizável, e avaliação de
-  esgotamento profissional com o **CBI (Copenhagen Burnout Inventory)** —
-  escolhido no lugar do MBI por ser um instrumento cientificamente validado e
-  de domínio público (o MBI é proprietário e exige licenciamento da Mind
-  Garden).
 - **Fase 7 — Dashboard consolidado e exportação de relatórios em PDF**.
 
 ## Aprendendo com este projeto

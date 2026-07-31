@@ -39,6 +39,7 @@
         <a href="{{ url_for('realizacoes_treinamento.editar', realizacao_id=realizacao.id) }}">Editar</a>
         <form method="post" action="{{ url_for('realizacoes_treinamento.excluir', realizacao_id=realizacao.id) }}"
               onsubmit="return confirm('Remover esta realização?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" class="link-botao">Excluir</button>
         </form>
       </td>

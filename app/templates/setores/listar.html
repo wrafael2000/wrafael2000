@@ -25,6 +25,7 @@
         <a href="{{ url_for('setores.editar', setor_id=setor.id) }}">Editar</a>
         <form method="post" action="{{ url_for('setores.excluir', setor_id=setor.id) }}"
               onsubmit="return confirm('Remover este setor?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" class="link-botao">Excluir</button>
         </form>
       </td>

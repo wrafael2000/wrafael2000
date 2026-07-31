@@ -14,6 +14,8 @@ from wtforms.validators import DataRequired, Email, Length, NumberRange, Optiona
 from .models.acidente import GRAVIDADES, TIPOS_ACIDENTE
 from .models.documento_sst import TIPOS_DOCUMENTO
 from .models.exame import RESULTADOS, TIPOS_EXAME
+from .models.plano_acao_psicossocial import STATUS_PLANO_ACAO
+from .models.questionario import TIPOS_QUESTIONARIO
 
 
 class LoginForm(FlaskForm):
@@ -123,3 +125,49 @@ class RealizacaoTreinamentoForm(FlaskForm):
     instrutor = StringField("Instrutor", validators=[Optional(), Length(max=120)])
     observacao = StringField("Observação", validators=[Optional(), Length(max=255)])
     submit = SubmitField("Salvar")
+
+
+class QuestionarioForm(FlaskForm):
+    tipo = SelectField("Tipo", choices=[(t, t) for t in TIPOS_QUESTIONARIO], validators=[DataRequired()])
+    nome = StringField("Nome", validators=[DataRequired(), Length(max=150)])
+    descricao = TextAreaField("Descrição", validators=[Optional()])
+    submit = SubmitField("Salvar")
+
+
+class PerguntaForm(FlaskForm):
+    texto = TextAreaField("Texto da pergunta", validators=[DataRequired()])
+    dimensao = StringField("Dimensão/categoria", validators=[DataRequired(), Length(max=80)])
+    ordem = IntegerField("Ordem", default=0, validators=[Optional(), NumberRange(min=0)])
+    submit = SubmitField("Salvar")
+
+
+class AplicacaoForm(FlaskForm):
+    questionario_id = SelectField("Questionário", coerce=int, validators=[DataRequired()])
+    titulo = StringField("Título da aplicação", validators=[DataRequired(), Length(max=150)])
+    data_inicio = DateField("Data de início", validators=[DataRequired()])
+    data_fim = DateField(
+        "Data de encerramento",
+        validators=[Optional()],
+        description="Deixe em branco para não ter data limite automática.",
+    )
+    submit = SubmitField("Salvar")
+
+
+class PlanoAcaoPsicossocialForm(FlaskForm):
+    dimensao = StringField(
+        "Dimensão relacionada (opcional)", validators=[Optional(), Length(max=80)]
+    )
+    descricao = TextAreaField("Ação", validators=[DataRequired()])
+    responsavel = StringField("Responsável", validators=[Optional(), Length(max=120)])
+    prazo = DateField("Prazo", validators=[Optional()])
+    status = SelectField(
+        "Status", choices=[(s, s) for s in STATUS_PLANO_ACAO], validators=[DataRequired()]
+    )
+    submit = SubmitField("Salvar")
+
+
+class RespostaPublicaForm(FlaskForm):
+    """Só carrega o token CSRF e o setor; as perguntas são renderizadas à parte."""
+
+    setor_id = SelectField("Setor (opcional)", coerce=int, validators=[Optional()])
+    submit = SubmitField("Enviar respostas")

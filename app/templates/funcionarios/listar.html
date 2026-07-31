@@ -35,6 +35,7 @@
         <a href="{{ url_for('funcionarios.editar', funcionario_id=funcionario.id) }}">Editar</a>
         <form method="post" action="{{ url_for('funcionarios.excluir', funcionario_id=funcionario.id) }}"
               onsubmit="return confirm('Remover este funcionário?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" class="link-botao">Excluir</button>
         </form>
       </td>

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block titulo %}Resultados - {{ aplicacao.titulo }}{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Resultados: {{ aplicacao.titulo }}</h1>
+  <a href="{{ url_for('aplicacoes.listar') }}" class="botao-secundario">Voltar</a>
+</div>
+
+<div class="cards-resumo">
+  <div class="card-resumo">
+    <span class="numero">{{ total_envios }}</span>
+    <span class="rotulo">Respostas recebidas</span>
+  </div>
+</div>
+
+<p class="dica">
+  As médias abaixo são apenas descritivas (escala {{ aplicacao.questionario.escala_min }} a
+  {{ aplicacao.questionario.escala_max }}). A classificação de risco (baixo/médio/alto) depende
+  do manual oficial de cada instrumento — consulte um profissional qualificado (médico do
+  trabalho, psicólogo ou engenheiro de segurança) para interpretar os resultados antes de agir.
+</p>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Dimensão</th>
+      <th>Média</th>
+      <th>Respostas</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in medias_por_dimensao %}
+    <tr>
+      <td>{{ item.dimensao }}</td>
+      <td>{{ item.media }}</td>
+      <td>{{ item.respostas }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="3">Ainda não há respostas para esta aplicação.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="cabecalho-pagina">
+  <h2>Plano de ação</h2>
+  <a href="{{ url_for('aplicacoes.novo_plano_acao', aplicacao_id=aplicacao.id) }}" class="botao">+ Nova ação</a>
+</div>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Dimensão</th>
+      <th>Ação</th>
+      <th>Responsável</th>
+      <th>Prazo</th>
+      <th>Status</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for plano in planos_acao %}
+    <tr>
+      <td>{{ plano.dimensao or "-" }}</td>
+      <td>{{ plano.descricao }}</td>
+      <td>{{ plano.responsavel or "-" }}</td>
+      <td>{{ plano.prazo.strftime("%d/%m/%Y") if plano.prazo else "-" }}</td>
+      <td>
+        {% if plano.status == "Concluído" %}
+          <span class="badge badge-sucesso">Concluído</span>
+        {% elif plano.status == "Em andamento" %}
+          <span class="badge badge-alerta">Em andamento</span>
+        {% else %}
+          <span class="badge badge-neutro">Pendente</span>
+        {% endif %}
+      </td>
+      <td class="acoes">
+        <a href="{{ url_for('aplicacoes.editar_plano_acao', plano_id=plano.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('aplicacoes.excluir_plano_acao', plano_id=plano.id) }}"
+              onsubmit="return confirm('Remover esta ação?');">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">Nenhuma ação registrada ainda.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

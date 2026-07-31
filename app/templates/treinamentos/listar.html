@@ -25,6 +25,7 @@
         <a href="{{ url_for('treinamentos.editar', treinamento_id=treinamento.id) }}">Editar</a>
         <form method="post" action="{{ url_for('treinamentos.excluir', treinamento_id=treinamento.id) }}"
               onsubmit="return confirm('Remover este treinamento do catálogo?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" class="link-botao">Excluir</button>
         </form>
       </td>
