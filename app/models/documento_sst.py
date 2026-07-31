@@ -2,7 +2,7 @@ from datetime import date, timedelta
 
 from ..extensions import db
 
-TIPOS_DOCUMENTO = ["PCMSO", "PGR", "Outro"]
+TIPOS_DOCUMENTO = ["PCMSO", "PGR", "LTCAT", "Outro"]
 
 
 class DocumentoSST(db.Model):

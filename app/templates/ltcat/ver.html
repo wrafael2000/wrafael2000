@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block titulo %}{{ ltcat.titulo }} - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>{{ ltcat.titulo }}</h1>
+  <div style="display: flex; gap: 0.75rem;">
+    <a href="{{ url_for('ltcat.editar', ltcat_id=ltcat.id) }}" class="botao-secundario">Editar</a>
+    <a href="{{ url_for('ltcat.listar') }}" class="botao-secundario">Voltar</a>
+  </div>
+</div>
+
+<div class="card card-larga">
+  <p><strong>Responsável técnico:</strong> {{ ltcat.responsavel_tecnico }}{% if ltcat.responsavel_tecnico_registro %} ({{ ltcat.responsavel_tecnico_registro }}){% endif %}</p>
+  <p><strong>Data de elaboração:</strong> {{ ltcat.data_elaboracao.strftime("%d/%m/%Y") }}
+     &nbsp;·&nbsp;
+     <strong>Validade:</strong> {{ ltcat.data_validade.strftime("%d/%m/%Y") if ltcat.data_validade else "Não informada" }}</p>
+  {% if ltcat.metodologia %}<p><strong>Metodologia:</strong> {{ ltcat.metodologia }}</p>{% endif %}
+</div>
+
+<div class="card card-larga">
+  <h2>Gerar PDF</h2>
+  <p class="dica">
+    Monta o PDF do LTCAT com os agentes nocivos abaixo e salva (ou atualiza) o arquivo em
+    Documentos SST. Revise sempre o PDF antes de considerá-lo o documento oficial da empresa.
+  </p>
+  {% if ltcat.documento and ltcat.documento.tem_arquivo %}
+    <p><span class="badge badge-sucesso">PDF já gerado</span>
+      <a href="{{ url_for('documentos.baixar_arquivo', documento_id=ltcat.documento.id) }}">Baixar PDF</a>
+    </p>
+  {% endif %}
+  <form method="post" action="{{ url_for('ltcat.gerar', ltcat_id=ltcat.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="botao">
+      {{ "Gerar novamente e atualizar em Documentos SST" if ltcat.documento else "Gerar PDF e salvar em Documentos SST" }}
+    </button>
+  </form>
+</div>
+
+<div class="cabecalho-pagina">
+  <h2>Agentes nocivos avaliados</h2>
+  <a href="{{ url_for('ltcat.novo_item', ltcat_id=ltcat.id) }}" class="botao">+ Adicionar agente</a>
+</div>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Setor</th>
+      <th>Função</th>
+      <th>Agente/tipo</th>
+      <th>Intensidade</th>
+      <th>EPI/EPC eficaz</th>
+      <th>Conclusão</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in ltcat.itens %}
+    <tr>
+      <td>{{ item.setor.nome }}</td>
+      <td>{{ item.funcao }}</td>
+      <td>{{ item.agente_nocivo }} ({{ item.tipo_agente }})</td>
+      <td>{{ item.intensidade_concentracao or "-" }}</td>
+      <td>{{ item.epi_epc_eficaz }}</td>
+      <td>
+        {% if item.conclusao == "Com direito a aposentadoria especial" %}
+          <span class="badge badge-alerta">{{ item.conclusao }}</span>
+        {% elif item.conclusao == "Sem direito a aposentadoria especial" %}
+          <span class="badge badge-sucesso">{{ item.conclusao }}</span>
+        {% else %}
+          <span class="badge badge-neutro">{{ item.conclusao }}</span>
+        {% endif %}
+      </td>
+      <td class="acoes">
+        <a href="{{ url_for('ltcat.editar_item', item_id=item.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('ltcat.excluir_item', item_id=item.id) }}"
+              onsubmit="return confirm('Remover este agente nocivo?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7">Nenhum agente nocivo cadastrado. Adicione acima antes de gerar o PDF.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

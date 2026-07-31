@@ -18,6 +18,7 @@ from .models.acidente import GRAVIDADES, TIPOS_ACIDENTE
 from .models.cipa import CARGOS_CIPA, TIPOS_REPRESENTACAO
 from .models.documento_sst import TIPOS_DOCUMENTO
 from .models.exame import RESULTADOS, TIPOS_EXAME
+from .models.ltcat import CATEGORIAS_AGENTE, CONCLUSOES_LTCAT, EFICACIA_EPI_EPC
 from .models.norma_regulamentadora import STATUS_CONFORMIDADE
 from .models.pgr import CATEGORIAS_RISCO, NIVEIS_RISCO, STATUS_ACAO_PGR
 from .models.plano_acao_psicossocial import STATUS_PLANO_ACAO
@@ -396,6 +397,52 @@ class ItemPcmsoForm(FlaskForm):
     )
     periodicidade_meses = IntegerField(
         "Periodicidade (em meses)", validators=[DataRequired(), NumberRange(min=1)]
+    )
+    observacoes = TextAreaField("Observações (opcional)", validators=[Optional()])
+    submit = SubmitField("Salvar item")
+
+
+class LtcatForm(FlaskForm):
+    titulo = StringField("Título", validators=[DataRequired(), Length(max=150)])
+    responsavel_tecnico = StringField(
+        "Responsável técnico", validators=[DataRequired(), Length(max=120)]
+    )
+    responsavel_tecnico_registro = StringField(
+        "Registro profissional (CREA, etc.)", validators=[Optional(), Length(max=60)]
+    )
+    data_elaboracao = DateField("Data de elaboração", validators=[DataRequired()])
+    data_validade = DateField(
+        "Validade / próxima revisão",
+        validators=[Optional()],
+        description="Recomendado revisar sempre que houver mudança relevante no ambiente de trabalho.",
+    )
+    metodologia = TextAreaField("Metodologia de avaliação (opcional)", validators=[Optional()])
+    submit = SubmitField("Salvar")
+
+
+class ItemLtcatForm(FlaskForm):
+    setor_id = SelectField("Setor", coerce=int, validators=[DataRequired()])
+    funcao = StringField("Função/cargo", validators=[DataRequired(), Length(max=150)])
+    tipo_agente = SelectField(
+        "Tipo de agente", choices=[(c, c) for c in CATEGORIAS_AGENTE], validators=[DataRequired()]
+    )
+    agente_nocivo = TextAreaField("Agente nocivo avaliado", validators=[DataRequired()])
+    intensidade_concentracao = StringField(
+        "Intensidade/concentração encontrada", validators=[Optional(), Length(max=80)]
+    )
+    limite_tolerancia = StringField(
+        "Limite de tolerância (NR-15, etc.)", validators=[Optional(), Length(max=80)]
+    )
+    tecnica_utilizada = StringField(
+        "Técnica/norma utilizada na avaliação", validators=[Optional(), Length(max=150)]
+    )
+    epi_epc_eficaz = SelectField(
+        "EPI/EPC neutraliza o agente?",
+        choices=[(e, e) for e in EFICACIA_EPI_EPC],
+        validators=[DataRequired()],
+    )
+    conclusao = SelectField(
+        "Conclusão", choices=[(c, c) for c in CONCLUSOES_LTCAT], validators=[DataRequired()]
     )
     observacoes = TextAreaField("Observações (opcional)", validators=[Optional()])
     submit = SubmitField("Salvar item")

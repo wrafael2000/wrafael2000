@@ -312,12 +312,23 @@ pergunta o e-mail e a nova senha.
   mais uma seção com a relação de exames (ASO) já registrados no sistema
   — dado real, puxado automaticamente, não digitado de novo — e também é
   salvo/atualizado como um registro em Documentos SST
+- **LTCAT — Laudo Técnico das Condições do Ambiente de Trabalho**
+  (acessível a partir de `Documentos → Gerador de LTCAT`): você cria o
+  cabeçalho (título, responsável técnico e registro profissional, datas,
+  metodologia opcional) e depois cadastra os agentes nocivos avaliados por
+  setor/função — tipo (físico, químico ou biológico), intensidade/
+  concentração encontrada, limite de tolerância, técnica utilizada, se o
+  EPI/EPC neutraliza o agente e a conclusão sobre direito a aposentadoria
+  especial. O PDF avisa que as medições e conclusões precisam ser
+  confirmadas por um engenheiro de segurança do trabalho, e também é
+  salvo/atualizado em Documentos SST (novo tipo "LTCAT" adicionado ao
+  cadastro de documentos)
 - **Sobre o gerador**: em todos os casos, o sistema só monta o documento no
   layout padrão com os dados já cadastrados (empresa, setores,
   funcionários, exames) — o conteúdo técnico (temas, riscos, medidas de
-  controle, diretrizes clínicas) é sempre digitado por quem está usando o
-  sistema. Isso vale também para os próximos geradores (LTCAT e PPP), que
-  serão adicionados em uma próxima etapa
+  controle, diretrizes clínicas, medições) é sempre digitado por quem está
+  usando o sistema. Isso vale também para o próximo gerador (PPP), que
+  será adicionado em uma próxima etapa
 
 ## Próximos passos (ideias para continuar)
 

@@ -9,6 +9,7 @@ from .entrega_epi import EntregaEpi
 from .epi import Epi
 from .exame import Exame
 from .funcionario import Funcionario
+from .ltcat import ItemLtcat, Ltcat
 from .norma_regulamentadora import ItemConformidadeNR, NormaRegulamentadora
 from .pcmso import ItemPcmso, Pcmso
 from .pgr import ItemRiscoPgr, Pgr
@@ -55,4 +56,6 @@ __all__ = [
     "ItemRiscoPgr",
     "Pcmso",
     "ItemPcmso",
+    "Ltcat",
+    "ItemLtcat",
 ]

@@ -386,6 +386,64 @@ def gerar_pdf_pcmso(pcmso):
     return buffer
 
 
+_AVISO_LTCAT = (
+    "Este documento foi gerado automaticamente pelo sistema a partir dos dados "
+    "cadastrados e não substitui a elaboração, as medições técnicas, a revisão e "
+    "a assinatura de um engenheiro de segurança do trabalho (ou profissional "
+    "legalmente habilitado). As intensidades/concentrações e conclusões sobre "
+    "direito a aposentadoria especial devem ser confirmadas por esse profissional "
+    "antes de considerar este o LTCAT oficial da empresa."
+)
+
+
+def gerar_pdf_ltcat(ltcat):
+    buffer = io.BytesIO()
+    doc, elementos = _novo_documento(buffer, "Laudo Técnico das Condições do Ambiente de Trabalho (LTCAT)")
+
+    elementos.append(_paragrafo_livre(_AVISO_LTCAT, _estilo_aviso))
+
+    linhas_cabecalho = [
+        ["Título", ltcat.titulo],
+        ["Responsável técnico", ltcat.responsavel_tecnico],
+        ["Data de elaboração", ltcat.data_elaboracao.strftime("%d/%m/%Y")],
+        ["Validade / próxima revisão", ltcat.data_validade.strftime("%d/%m/%Y") if ltcat.data_validade else "Não informada"],
+    ]
+    if ltcat.responsavel_tecnico_registro:
+        linhas_cabecalho.insert(2, ["Registro profissional", ltcat.responsavel_tecnico_registro])
+    elementos.append(_tabela(["Campo", "Valor"], linhas_cabecalho, larguras=[5 * cm, 11 * cm]))
+
+    if ltcat.metodologia:
+        elementos.append(Paragraph("Metodologia de avaliação", _estilo_secao))
+        elementos.append(_paragrafo_livre(ltcat.metodologia))
+
+    elementos.append(Paragraph("Agentes nocivos avaliados", _estilo_secao))
+    if ltcat.itens:
+        elementos.append(
+            _tabela(
+                ["Setor", "Função", "Agente/tipo", "Intensidade", "Limite", "EPI/EPC eficaz", "Conclusão"],
+                [
+                    [
+                        item.setor.nome,
+                        item.funcao,
+                        f"{item.agente_nocivo} ({item.tipo_agente})",
+                        item.intensidade_concentracao or "-",
+                        item.limite_tolerancia or "-",
+                        item.epi_epc_eficaz,
+                        item.conclusao,
+                    ]
+                    for item in ltcat.itens
+                ],
+                larguras=[1.8 * cm, 2 * cm, 4 * cm, 2 * cm, 2 * cm, 2.2 * cm, 2 * cm],
+            )
+        )
+    else:
+        elementos.append(Paragraph("Nenhum agente nocivo cadastrado.", _estilo_texto))
+
+    doc.build(elementos)
+    buffer.seek(0)
+    return buffer
+
+
 def gerar_pdf_relatorio_acidentes(dados):
     buffer = io.BytesIO()
     doc, elementos = _novo_documento(buffer, "Relatório de Acidentes e Incidentes")
