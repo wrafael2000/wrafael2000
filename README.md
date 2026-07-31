@@ -231,9 +231,10 @@ pergunta o e-mail e a nova senha.
   (ex.: normas mais recentes)
 
 **Fase 10 — Cadastro de empresa, recuperação de senha e upload de documentos**
-- **Cadastro de empresa** (`Empresa → editar`): razão social, nome fantasia,
+- **Cadastro de empresa** (`Empresas`): razão social, nome fantasia,
   CNPJ, endereço, telefone e e-mail. O nome (fantasia, ou razão social se não
-  houver fantasia) passa a aparecer no cabeçalho dos relatórios em PDF
+  houver fantasia) da primeira empresa cadastrada passa a aparecer no
+  cabeçalho dos relatórios em PDF
 - **"Esqueci minha senha" na tela de login**: gera um código de recuperação
   na primeira vez que o sistema roda, salvo em texto puro no arquivo
   `codigo_recuperacao.txt`, na mesma pasta do banco de dados (`dados/`, no
@@ -250,6 +251,35 @@ pergunta o e-mail e a nova senha.
   programa), colunas novas em tabelas já existentes são adicionadas
   sozinhas na inicialização (`ALTER TABLE ... ADD COLUMN`), sem apagar
   nenhuma linha — testado simulando um banco no formato antigo
+
+**Fase 11 — Múltiplas empresas e avaliações psicossociais por setor**
+- **Empresa: cadastro múltiplo** (`Empresas`): o cadastro de empresa deixou
+  de ser um registro único e passou a ser uma lista (`listar`/`nova`/
+  `editar`/`excluir`), para empresas com mais de uma razão social/filial.
+  Essa mudança vale só para o módulo de Avaliações — o restante do sistema
+  (funcionários, EPIs, exames, etc.) continua sendo uma base única e não
+  tem noção de "empresa" separada
+- **Nova Avaliação com mais opções**: ao criar uma avaliação de questionário
+  (HSE-IT, COPSOQ II, CBI ou Clima), agora é possível escolher a empresa,
+  escrever uma descrição, marcar se a avaliação está ativa e se é
+  **multisetorial** (permite que o respondente marque mais de um setor)
+- **Setores/departamentos por avaliação**: depois de criar a avaliação, a
+  tela de detalhes permite adicionar os setores que participam dela e a
+  quantidade de colaboradores em cada um (um retrato daquele momento, não
+  precisa bater com o cadastro de Funcionários) — usado para calcular a
+  taxa de resposta
+- **Pesquisa pública por setor**: quando a avaliação tem setores
+  configurados, a tela pública de resposta anônima mostra esses setores no
+  lugar da lista geral de setores do sistema — como lista suspensa (um
+  setor) ou caixas de marcação (vários setores, se a avaliação for
+  multisetorial). Avaliações antigas, sem setores configurados, continuam
+  funcionando como antes
+- **Taxa de resposta por setor**: a tela de resultados ganhou uma tabela
+  mostrando quantas pessoas responderam em cada setor comparado com a
+  quantidade de colaboradores informada
+- **Texto "Sobre o instrumento"**: a tela de detalhes de cada avaliação
+  mostra uma explicação resumida do questionário usado (HSE-IT, COPSOQ II,
+  CBI ou Clima Organizacional)
 
 ## Próximos passos (ideias para continuar)
 

@@ -34,6 +34,7 @@
       </td>
       <td>{{ aplicacao.envios|length }}</td>
       <td class="acoes">
+        <a href="{{ url_for('aplicacoes.ver', aplicacao_id=aplicacao.id) }}">Ver / gerenciar</a>
         <a href="{{ url_for('aplicacoes.resultados', aplicacao_id=aplicacao.id) }}">Resultados</a>
         <form method="post" action="{{ url_for('aplicacoes.alternar_status', aplicacao_id=aplicacao.id) }}">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

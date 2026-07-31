@@ -15,17 +15,25 @@ class Aplicacao(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(150), nullable=False)
+    descricao = db.Column(db.Text)
     data_inicio = db.Column(db.Date, nullable=False, default=date.today)
     data_fim = db.Column(db.Date)
     ativa = db.Column(db.Boolean, default=True, nullable=False)
+    multisetorial = db.Column(db.Boolean, default=False, nullable=False)
     token_publico = db.Column(db.String(40), unique=True, nullable=False, default=_gerar_token)
 
     questionario_id = db.Column(db.Integer, db.ForeignKey("questionarios.id"), nullable=False)
     questionario = db.relationship("Questionario", back_populates="aplicacoes")
 
+    empresa_id = db.Column(db.Integer, db.ForeignKey("empresa.id"), nullable=True)
+    empresa = db.relationship("Empresa")
+
     envios = db.relationship("Envio", back_populates="aplicacao", cascade="all, delete-orphan")
     planos_acao = db.relationship(
         "PlanoAcaoPsicossocial", back_populates="aplicacao", cascade="all, delete-orphan"
+    )
+    segmentos = db.relationship(
+        "SegmentoAplicacao", back_populates="aplicacao", cascade="all, delete-orphan"
     )
 
     @property
@@ -53,6 +61,10 @@ class Envio(db.Model):
 
     setor_id = db.Column(db.Integer, db.ForeignKey("setores.id"), nullable=True)
     setor = db.relationship("Setor")
+
+    segmentos = db.relationship(
+        "SegmentoAplicacao", secondary="envio_segmentos", backref="envios"
+    )
 
     respostas = db.relationship("Resposta", back_populates="envio", cascade="all, delete-orphan")
 

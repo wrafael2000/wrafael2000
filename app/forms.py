@@ -152,15 +152,35 @@ class PerguntaForm(FlaskForm):
 
 
 class AplicacaoForm(FlaskForm):
+    empresa_id = SelectField("Empresa", coerce=int, validators=[DataRequired()])
     questionario_id = SelectField("Questionário", coerce=int, validators=[DataRequired()])
-    titulo = StringField("Título da aplicação", validators=[DataRequired(), Length(max=150)])
+    titulo = StringField("Título", validators=[DataRequired(), Length(max=150)])
+    descricao = TextAreaField("Descrição", validators=[Optional()])
     data_inicio = DateField("Data de início", validators=[DataRequired()])
     data_fim = DateField(
-        "Data de encerramento",
+        "Data de término",
         validators=[Optional()],
         description="Deixe em branco para não ter data limite automática.",
     )
-    submit = SubmitField("Salvar")
+    ativa = BooleanField(
+        "Avaliação ativa",
+        default=True,
+        description="Permite que funcionários respondam.",
+    )
+    multisetorial = BooleanField(
+        "Avaliação multisetorial",
+        default=False,
+        description="Permite que colaboradores que atuam em mais de um setor marquem todos os setores em que trabalham.",
+    )
+    submit = SubmitField("Salvar avaliação")
+
+
+class SegmentoAplicacaoForm(FlaskForm):
+    setor_id = SelectField("Setor/Departamento", coerce=int, validators=[DataRequired()])
+    quantidade_colaboradores = IntegerField(
+        "Quantidade de colaboradores", validators=[DataRequired(), NumberRange(min=1)]
+    )
+    submit = SubmitField("Adicionar")
 
 
 class PlanoAcaoPsicossocialForm(FlaskForm):

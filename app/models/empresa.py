@@ -2,7 +2,7 @@ from ..extensions import db
 
 
 class Empresa(db.Model):
-    """Dados cadastrais da empresa que usa o sistema (registro único)."""
+    """Dados cadastrais de uma empresa cadastrada no sistema."""
 
     __tablename__ = "empresa"
 

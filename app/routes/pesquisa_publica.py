@@ -23,15 +23,35 @@ def responder(token):
     if not aplicacao.disponivel:
         return render_template("pesquisa_publica/encerrada.html", aplicacao=aplicacao)
 
+    usa_segmentos = len(aplicacao.segmentos) > 0
+
     form = RespostaPublicaForm()
-    form.setor_id.choices = [(0, "Prefiro não informar")] + [
-        (s.id, s.nome) for s in Setor.query.order_by(Setor.nome).all()
-    ]
+    if not usa_segmentos:
+        form.setor_id.choices = [(0, "Prefiro não informar")] + [
+            (s.id, s.nome) for s in Setor.query.order_by(Setor.nome).all()
+        ]
+    else:
+        # Campo não é exibido: os setores participantes são os segmentos
+        # configurados na aplicação, tratados fora deste FlaskForm.
+        form.setor_id.validate_choice = False
 
     perguntas = aplicacao.questionario.perguntas
     erros_perguntas = []
 
     if form.validate_on_submit():
+        segmentos_selecionados = []
+        if usa_segmentos:
+            if aplicacao.multisetorial:
+                ids_brutos = request.form.getlist("segmentos")
+            else:
+                valor = request.form.get("segmento_id")
+                ids_brutos = [valor] if valor else []
+            ids_segmentos = {int(i) for i in ids_brutos if i and i.isdigit()}
+            segmentos_por_id = {s.id: s for s in aplicacao.segmentos}
+            segmentos_selecionados = [
+                segmentos_por_id[i] for i in ids_segmentos if i in segmentos_por_id
+            ]
+
         respostas_coletadas = {}
         for pergunta in perguntas:
             valor_bruto = request.form.get(f"pergunta_{pergunta.id}")
@@ -47,8 +67,9 @@ def responder(token):
         if not erros_perguntas:
             envio = Envio(
                 aplicacao_id=aplicacao.id,
-                setor_id=form.setor_id.data if form.setor_id.data else None,
+                setor_id=(form.setor_id.data if not usa_segmentos and form.setor_id.data else None),
             )
+            envio.segmentos = segmentos_selecionados
             db.session.add(envio)
             db.session.flush()
             for pergunta_id, valor in respostas_coletadas.items():
@@ -63,6 +84,7 @@ def responder(token):
         grupos=grupos,
         form=form,
         erros_perguntas=erros_perguntas,
+        usa_segmentos=usa_segmentos,
     )
 
 

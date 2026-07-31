@@ -12,6 +12,7 @@ from .plano_acao_psicossocial import PlanoAcaoPsicossocial
 from .questionario import Pergunta, Questionario
 from .realizacao_treinamento import RealizacaoTreinamento
 from .reuniao_cipa import ReuniaoCipa
+from .segmento_aplicacao import SegmentoAplicacao
 from .setor import Setor
 from .sipat import AtividadeSipat, SipatEdicao
 from .treinamento import Treinamento
@@ -33,6 +34,7 @@ __all__ = [
     "Aplicacao",
     "Envio",
     "Resposta",
+    "SegmentoAplicacao",
     "PlanoAcaoPsicossocial",
     "MandatoCipa",
     "MembroCipa",

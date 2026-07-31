@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} - Gestão de SST{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+<p class="dica">Avaliação: {{ aplicacao.titulo }}</p>
+<form method="post" novalidate class="card card-larga">
+  {{ form.hidden_tag() }}
+  <div class="campo">
+    {{ form.setor_id.label }}
+    {{ form.setor_id(class_="input") }}
+    {% for erro in form.setor_id.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.quantidade_colaboradores.label }}
+    {{ form.quantidade_colaboradores(class_="input") }}
+    {% for erro in form.quantidade_colaboradores.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  {{ form.submit(class_="botao") }}
+  <a href="{{ url_for('aplicacoes.ver', aplicacao_id=aplicacao.id) }}" class="botao-secundario">Cancelar</a>
+</form>
+{% endblock %}

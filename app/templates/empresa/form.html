@@ -1,11 +1,7 @@
 {% extends "base.html" %}
-{% block titulo %}Dados da Empresa - Gestão de SST{% endblock %}
+{% block titulo %}{{ titulo }} - Gestão de SST{% endblock %}
 {% block conteudo %}
-<h1>Dados da empresa</h1>
-<p class="dica">
-  Essas informações aparecem no cabeçalho dos relatórios em PDF gerados pelo
-  sistema.
-</p>
+<h1>{{ titulo }}</h1>
 <form method="post" novalidate class="card card-larga">
   {{ form.hidden_tag() }}
   <div class="campo">
@@ -35,5 +31,6 @@
     {% for erro in form.email.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
   </div>
   {{ form.submit(class_="botao") }}
+  <a href="{{ url_for('empresa.listar') }}" class="botao-secundario">Cancelar</a>
 </form>
 {% endblock %}

@@ -14,6 +14,11 @@ COLUNAS_NOVAS = {
         ("arquivo_nome_original", "VARCHAR(255)"),
         ("arquivo_nome_armazenado", "VARCHAR(255)"),
     ],
+    "aplicacoes": [
+        ("descricao", "TEXT"),
+        ("multisetorial", "BOOLEAN DEFAULT 0 NOT NULL"),
+        ("empresa_id", "INTEGER REFERENCES empresa(id)"),
+    ],
 }
 
 

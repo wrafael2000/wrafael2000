@@ -20,6 +20,30 @@
   trabalho, psicólogo ou engenheiro de segurança) para interpretar os resultados antes de agir.
 </p>
 
+{% if taxa_por_segmento %}
+<h2>Taxa de resposta por setor</h2>
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Setor</th>
+      <th>Respondentes</th>
+      <th>Colaboradores</th>
+      <th>Taxa de resposta</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in taxa_por_segmento %}
+    <tr>
+      <td>{{ item.setor }}</td>
+      <td>{{ item.respondentes }}</td>
+      <td>{{ item.quantidade_colaboradores }}</td>
+      <td>{{ (item.taxa ~ "%") if item.taxa is not none else "-" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
 <table class="tabela">
   <thead>
     <tr>
@@ -77,6 +101,7 @@
         <a href="{{ url_for('aplicacoes.editar_plano_acao', plano_id=plano.id) }}">Editar</a>
         <form method="post" action="{{ url_for('aplicacoes.excluir_plano_acao', plano_id=plano.id) }}"
               onsubmit="return confirm('Remover esta ação?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" class="link-botao">Excluir</button>
         </form>
       </td>

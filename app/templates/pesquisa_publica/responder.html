@@ -10,10 +10,34 @@
 <form method="post" novalidate class="card card-larga">
   {{ form.hidden_tag() }}
 
+  {% if usa_segmentos %}
+    {% if aplicacao.multisetorial %}
+    <div class="campo">
+      <label>Setores em que você atua (marque todos que se aplicam)</label>
+      {% for segmento in aplicacao.segmentos %}
+      <label class="opcao-radio">
+        <input type="checkbox" name="segmentos" value="{{ segmento.id }}">
+        {{ segmento.setor.nome }}
+      </label>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="campo">
+      <label for="segmento_id">Setor</label>
+      <select name="segmento_id" id="segmento_id" class="input">
+        <option value="">Prefiro não informar</option>
+        {% for segmento in aplicacao.segmentos %}
+        <option value="{{ segmento.id }}">{{ segmento.setor.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+  {% else %}
   <div class="campo">
     {{ form.setor_id.label }}
     {{ form.setor_id(class_="input") }}
   </div>
+  {% endif %}
 
   {% for dimensao, perguntas in grupos.items() %}
   <h2>{{ dimensao }}</h2>

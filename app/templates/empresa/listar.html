@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block titulo %}Empresas - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Empresas</h1>
+  <a href="{{ url_for('empresa.nova') }}" class="botao">+ Nova empresa</a>
+</div>
+<p class="dica">
+  A primeira empresa cadastrada aparece no cabeçalho dos relatórios em PDF
+  gerados pelo sistema. As empresas cadastradas aqui também podem ser
+  selecionadas ao criar uma nova aplicação de questionário.
+</p>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Razão social</th>
+      <th>Nome fantasia</th>
+      <th>CNPJ</th>
+      <th>Telefone</th>
+      <th>E-mail</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for empresa in empresas %}
+    <tr>
+      <td>{{ empresa.razao_social }}</td>
+      <td>{{ empresa.nome_fantasia or "-" }}</td>
+      <td>{{ empresa.cnpj or "-" }}</td>
+      <td>{{ empresa.telefone or "-" }}</td>
+      <td>{{ empresa.email or "-" }}</td>
+      <td class="acoes">
+        <a href="{{ url_for('empresa.editar', empresa_id=empresa.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('empresa.excluir', empresa_id=empresa.id) }}"
+              onsubmit="return confirm('Remover esta empresa?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">Nenhuma empresa cadastrada ainda.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
