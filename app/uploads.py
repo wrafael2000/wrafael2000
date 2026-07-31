@@ -33,6 +33,16 @@ def salvar_arquivo(arquivo_enviado):
     return nome_armazenado
 
 
+def salvar_bytes(dados, nome_original):
+    """Salva bytes (ex.: PDF gerado pelo próprio sistema) e devolve o nome interno gerado."""
+    nome_seguro = secure_filename(nome_original) or "arquivo"
+    extensao = os.path.splitext(nome_seguro)[1]
+    nome_armazenado = f"{uuid.uuid4().hex}{extensao}"
+    with open(os.path.join(pasta_uploads(), nome_armazenado), "wb") as arquivo:
+        arquivo.write(dados)
+    return nome_armazenado
+
+
 def remover_arquivo(nome_armazenado):
     if not nome_armazenado:
         return

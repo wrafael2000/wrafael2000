@@ -224,6 +224,92 @@ def gerar_pdf_apr(apr):
     return buffer
 
 
+_estilo_aviso = ParagraphStyle(
+    "AvisoRelatorio",
+    parent=_estilos["Normal"],
+    textColor=colors.HexColor("#8c261e"),
+    backColor=colors.HexColor("#fbe4e2"),
+    borderPadding=8,
+    spaceBefore=10,
+    spaceAfter=10,
+)
+
+_AVISO_PGR = (
+    "Este documento foi gerado automaticamente pelo sistema a partir dos dados "
+    "cadastrados e não substitui a elaboração, revisão e assinatura de um "
+    "engenheiro de segurança do trabalho (ou profissional legalmente habilitado), "
+    "conforme exige a NR-01. Revise todo o conteúdo antes de considerá-lo o PGR "
+    "oficial da empresa."
+)
+
+
+def gerar_pdf_pgr(pgr):
+    buffer = io.BytesIO()
+    doc, elementos = _novo_documento(buffer, "Programa de Gerenciamento de Riscos (PGR)")
+
+    elementos.append(_paragrafo_livre(_AVISO_PGR, _estilo_aviso))
+
+    linhas_cabecalho = [
+        ["Título", pgr.titulo],
+        ["Responsável técnico", pgr.responsavel_tecnico],
+        ["Data de elaboração", pgr.data_elaboracao.strftime("%d/%m/%Y")],
+        ["Validade / próxima revisão", pgr.data_validade.strftime("%d/%m/%Y") if pgr.data_validade else "Não informada"],
+    ]
+    if pgr.responsavel_tecnico_registro:
+        linhas_cabecalho.insert(2, ["Registro profissional", pgr.responsavel_tecnico_registro])
+    elementos.append(_tabela(["Campo", "Valor"], linhas_cabecalho, larguras=[5 * cm, 11 * cm]))
+
+    if pgr.introducao:
+        elementos.append(Paragraph("Introdução / metodologia", _estilo_secao))
+        elementos.append(_paragrafo_livre(pgr.introducao))
+
+    elementos.append(Paragraph("Inventário de riscos", _estilo_secao))
+    if pgr.itens:
+        elementos.append(
+            _tabela(
+                ["Setor", "Função/atividade", "Categoria", "Perigo/fator de risco", "Nível"],
+                [
+                    [
+                        item.setor.nome,
+                        item.funcao_atividade or "-",
+                        item.categoria_risco,
+                        item.perigo_fator_risco,
+                        item.nivel_risco,
+                    ]
+                    for item in pgr.itens
+                ],
+                larguras=[2.6 * cm, 2.8 * cm, 2.6 * cm, 6 * cm, 2 * cm],
+            )
+        )
+    else:
+        elementos.append(Paragraph("Nenhum item de risco cadastrado.", _estilo_texto))
+
+    elementos.append(Paragraph("Plano de ação", _estilo_secao))
+    if pgr.itens:
+        elementos.append(
+            _tabela(
+                ["Setor", "Medida recomendada", "Responsável", "Prazo", "Status"],
+                [
+                    [
+                        item.setor.nome,
+                        item.medidas_recomendadas,
+                        item.responsavel_acao or "-",
+                        item.prazo.strftime("%d/%m/%Y") if item.prazo else "-",
+                        item.status,
+                    ]
+                    for item in pgr.itens
+                ],
+                larguras=[2.6 * cm, 6.8 * cm, 2.8 * cm, 2 * cm, 1.8 * cm],
+            )
+        )
+    else:
+        elementos.append(Paragraph("Nenhuma ação cadastrada.", _estilo_texto))
+
+    doc.build(elementos)
+    buffer.seek(0)
+    return buffer
+
+
 def gerar_pdf_relatorio_acidentes(dados):
     buffer = io.BytesIO()
     doc, elementos = _novo_documento(buffer, "Relatório de Acidentes e Incidentes")

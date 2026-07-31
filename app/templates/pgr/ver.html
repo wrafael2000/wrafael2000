@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block titulo %}{{ pgr.titulo }} - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>{{ pgr.titulo }}</h1>
+  <div style="display: flex; gap: 0.75rem;">
+    <a href="{{ url_for('pgr.editar', pgr_id=pgr.id) }}" class="botao-secundario">Editar</a>
+    <a href="{{ url_for('pgr.listar') }}" class="botao-secundario">Voltar</a>
+  </div>
+</div>
+
+<div class="card card-larga">
+  <p><strong>Responsável técnico:</strong> {{ pgr.responsavel_tecnico }}{% if pgr.responsavel_tecnico_registro %} ({{ pgr.responsavel_tecnico_registro }}){% endif %}</p>
+  <p><strong>Data de elaboração:</strong> {{ pgr.data_elaboracao.strftime("%d/%m/%Y") }}
+     &nbsp;·&nbsp;
+     <strong>Validade:</strong> {{ pgr.data_validade.strftime("%d/%m/%Y") if pgr.data_validade else "Não informada" }}</p>
+  {% if pgr.introducao %}<p><strong>Introdução:</strong> {{ pgr.introducao }}</p>{% endif %}
+</div>
+
+<div class="card card-larga">
+  <h2>Gerar PDF</h2>
+  <p class="dica">
+    Monta o PDF do PGR com os itens de risco abaixo e salva (ou atualiza) o arquivo em
+    Documentos SST. Revise sempre o PDF antes de considerá-lo o documento oficial da empresa.
+  </p>
+  {% if pgr.documento and pgr.documento.tem_arquivo %}
+    <p><span class="badge badge-sucesso">PDF já gerado</span>
+      <a href="{{ url_for('documentos.baixar_arquivo', documento_id=pgr.documento.id) }}">Baixar PDF</a>
+    </p>
+  {% endif %}
+  <form method="post" action="{{ url_for('pgr.gerar', pgr_id=pgr.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="botao">
+      {{ "Gerar novamente e atualizar em Documentos SST" if pgr.documento else "Gerar PDF e salvar em Documentos SST" }}
+    </button>
+  </form>
+</div>
+
+<div class="cabecalho-pagina">
+  <h2>Inventário de riscos e plano de ação</h2>
+  <a href="{{ url_for('pgr.novo_item', pgr_id=pgr.id) }}" class="botao">+ Adicionar item</a>
+</div>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Setor</th>
+      <th>Perigo/fator de risco</th>
+      <th>Categoria</th>
+      <th>Nível</th>
+      <th>Status</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in pgr.itens %}
+    <tr>
+      <td>{{ item.setor.nome }}</td>
+      <td>{{ item.perigo_fator_risco }}</td>
+      <td>{{ item.categoria_risco }}</td>
+      <td>{{ item.nivel_risco }}</td>
+      <td>
+        {% if item.status == "Concluído" %}
+          <span class="badge badge-sucesso">Concluído</span>
+        {% elif item.status == "Em andamento" %}
+          <span class="badge badge-alerta">Em andamento</span>
+        {% else %}
+          <span class="badge badge-neutro">Pendente</span>
+        {% endif %}
+      </td>
+      <td class="acoes">
+        <a href="{{ url_for('pgr.editar_item', item_id=item.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('pgr.excluir_item', item_id=item.id) }}"
+              onsubmit="return confirm('Remover este item de risco?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">Nenhum item de risco cadastrado. Adicione acima antes de gerar o PDF.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -281,7 +281,7 @@ pergunta o e-mail e a nova senha.
   mostra uma explicação resumida do questionário usado (HSE-IT, COPSOQ II,
   CBI ou Clima Organizacional)
 
-**Fase 12 — Geradores de DDS e APR (parte 1 de 2 dos geradores de documentos)**
+**Fase 12 — Geradores de DDS, APR e PGR (parte 1 dos geradores de documentos)**
 - **DDS — Diálogo Diário de Segurança** (`DDS`): registra data, setor, tema
   abordado, responsável pelo diálogo, conteúdo/observações e a lista de
   participantes (escolhidos entre os funcionários ativos). Cada registro
@@ -293,12 +293,22 @@ pergunta o e-mail e a nova senha.
   de criada, a tela de detalhes permite adicionar quantas etapas forem
   necessárias, cada uma com o perigo/risco identificado e a medida de
   controle correspondente. Também pode ser baixada em PDF
-- **Sobre o gerador**: em ambos os casos, o sistema só monta o documento no
+- **PGR — Programa de Gerenciamento de Riscos** (acessível a partir de
+  `Documentos → Gerador de PGR`, conforme a NR-01): você cria o cabeçalho
+  (título, responsável técnico e registro profissional, datas de
+  elaboração/validade, introdução opcional) e depois cadastra o inventário
+  de riscos por setor — perigo/fator de risco, categoria, fonte geradora,
+  medidas existentes, nível de risco, medida recomendada, prazo,
+  responsável e status. O botão "Gerar PDF" monta o documento completo
+  (com aviso de que precisa ser revisado e assinado por um engenheiro de
+  segurança do trabalho) e salva automaticamente como um registro em
+  Documentos SST — gerar de novo atualiza o mesmo arquivo, sem duplicar
+- **Sobre o gerador**: em todos os casos, o sistema só monta o documento no
   layout padrão com os dados já cadastrados (empresa, setores,
   funcionários) — o conteúdo técnico (temas, riscos, medidas de controle)
   é sempre digitado por quem está usando o sistema. Isso vale também para
-  os próximos geradores (PGR, PCMSO, LTCAT e PPP), que serão adicionados
-  em uma próxima etapa
+  os próximos geradores (PCMSO, LTCAT e PPP), que serão adicionados em uma
+  próxima etapa
 
 ## Próximos passos (ideias para continuar)
 

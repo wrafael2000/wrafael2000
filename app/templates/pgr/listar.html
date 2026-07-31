@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block titulo %}Gerador de PGR - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Gerador de PGR</h1>
+  <a href="{{ url_for('pgr.novo') }}" class="botao">+ Novo PGR</a>
+</div>
+<p class="dica">
+  O PGR (Programa de Gerenciamento de Riscos, NR-01) montado aqui usa o inventário
+  de riscos que você cadastrar. O PDF gerado precisa ser revisado e assinado por um
+  engenheiro de segurança do trabalho (ou profissional habilitado) antes de virar o
+  documento oficial da empresa.
+</p>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Título</th>
+      <th>Responsável técnico</th>
+      <th>Elaboração</th>
+      <th>Validade</th>
+      <th>Itens de risco</th>
+      <th>PDF gerado</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for registro in registros %}
+    <tr>
+      <td>{{ registro.titulo }}</td>
+      <td>{{ registro.responsavel_tecnico }}</td>
+      <td>{{ registro.data_elaboracao.strftime("%d/%m/%Y") }}</td>
+      <td>{{ registro.data_validade.strftime("%d/%m/%Y") if registro.data_validade else "-" }}</td>
+      <td>{{ registro.itens|length }}</td>
+      <td>
+        {% if registro.documento and registro.documento.tem_arquivo %}
+          <span class="badge badge-sucesso">Sim</span>
+        {% else %}
+          <span class="badge badge-neutro">Ainda não</span>
+        {% endif %}
+      </td>
+      <td class="acoes">
+        <a href="{{ url_for('pgr.ver', pgr_id=registro.id) }}">Ver / gerenciar</a>
+        <form method="post" action="{{ url_for('pgr.excluir', pgr_id=registro.id) }}"
+              onsubmit="return confirm('Remover este PGR e seus itens de risco?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7">Nenhum PGR cadastrado ainda.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ url_for('documentos.listar') }}" class="botao-secundario">Voltar para Documentos SST</a>
+{% endblock %}

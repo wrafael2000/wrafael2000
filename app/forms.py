@@ -19,6 +19,7 @@ from .models.cipa import CARGOS_CIPA, TIPOS_REPRESENTACAO
 from .models.documento_sst import TIPOS_DOCUMENTO
 from .models.exame import RESULTADOS, TIPOS_EXAME
 from .models.norma_regulamentadora import STATUS_CONFORMIDADE
+from .models.pgr import CATEGORIAS_RISCO, NIVEIS_RISCO, STATUS_ACAO_PGR
 from .models.plano_acao_psicossocial import STATUS_PLANO_ACAO
 from .models.questionario import TIPOS_QUESTIONARIO
 from .models.reuniao_cipa import TIPOS_REUNIAO_CIPA
@@ -319,6 +320,51 @@ class EtapaAprForm(FlaskForm):
     perigo_risco = TextAreaField("Perigo/risco identificado", validators=[DataRequired()])
     medida_controle = TextAreaField("Medida de controle", validators=[DataRequired()])
     submit = SubmitField("Adicionar etapa")
+
+
+class PgrForm(FlaskForm):
+    titulo = StringField("Título", validators=[DataRequired(), Length(max=150)])
+    responsavel_tecnico = StringField(
+        "Responsável técnico", validators=[DataRequired(), Length(max=120)]
+    )
+    responsavel_tecnico_registro = StringField(
+        "Registro profissional (CREA, etc.)", validators=[Optional(), Length(max=60)]
+    )
+    data_elaboracao = DateField("Data de elaboração", validators=[DataRequired()])
+    data_validade = DateField(
+        "Validade / próxima revisão",
+        validators=[Optional()],
+        description="Recomendado revisar o PGR a cada 2 anos, ou antes disso se houver mudança relevante no processo de trabalho.",
+    )
+    introducao = TextAreaField("Introdução / metodologia (opcional)", validators=[Optional()])
+    submit = SubmitField("Salvar")
+
+
+class ItemRiscoPgrForm(FlaskForm):
+    setor_id = SelectField("Setor", coerce=int, validators=[DataRequired()])
+    funcao_atividade = StringField("Função/atividade (opcional)", validators=[Optional(), Length(max=150)])
+    categoria_risco = SelectField(
+        "Categoria de risco", choices=[(c, c) for c in CATEGORIAS_RISCO], validators=[DataRequired()]
+    )
+    perigo_fator_risco = TextAreaField(
+        "Perigo/fator de risco identificado", validators=[DataRequired()]
+    )
+    fonte_geradora = TextAreaField("Fonte geradora (opcional)", validators=[Optional()])
+    medidas_existentes = TextAreaField(
+        "Medidas de controle existentes (opcional)", validators=[Optional()]
+    )
+    nivel_risco = SelectField(
+        "Nível de risco", choices=[(n, n) for n in NIVEIS_RISCO], validators=[DataRequired()]
+    )
+    medidas_recomendadas = TextAreaField(
+        "Medidas de controle recomendadas", validators=[DataRequired()]
+    )
+    prazo = DateField("Prazo (opcional)", validators=[Optional()])
+    responsavel_acao = StringField("Responsável pela ação (opcional)", validators=[Optional(), Length(max=120)])
+    status = SelectField(
+        "Status", choices=[(s, s) for s in STATUS_ACAO_PGR], validators=[DataRequired()]
+    )
+    submit = SubmitField("Salvar item")
 
 
 class EsqueciSenhaForm(FlaskForm):
