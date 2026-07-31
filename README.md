@@ -84,10 +84,17 @@ primeira execução.
   além do total acumulado de dias de afastamento
 - Dashboard com contador de acidentes nos últimos 30 dias
 
+**Fase 4 — Exames e documentos obrigatórios**
+- Exames (ASO) por funcionário: tipo, data, validade, resultado (apto/inapto)
+  e médico responsável
+- Documentos SST da empresa (PCMSO, PGR, outros): tipo, emissão, validade e
+  responsável técnico
+- Dashboard reformulado com uma tabela única de **próximos vencimentos**,
+  reunindo EPIs, exames e documentos vencidos/vencendo, ordenados pelo mais
+  urgente — a mesma tabela vai receber treinamentos na próxima fase
+
 ## Roadmap (próximas fases)
 
-- **Fase 4 — Exames e documentos obrigatórios**: controle de ASO, PCMSO, PGR
-  e prazos de validade, com alertas.
 - **Fase 5 — Treinamentos e certificações**: controle de treinamentos de NRs
   por funcionário, com validade e alertas de renovação.
 - **Fase 6 — Riscos psicossociais e clima organizacional**: aplicação dos

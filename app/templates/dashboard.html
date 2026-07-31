@@ -11,22 +11,56 @@
     <span class="numero">{{ total_setores }}</span>
     <span class="rotulo">Setores cadastrados</span>
   </div>
-  <div class="card-resumo {{ 'card-resumo-alerta' if epis_vencendo }}">
-    <span class="numero">{{ epis_vencendo }}</span>
-    <span class="rotulo">EPIs vencendo em 30 dias</span>
-  </div>
-  <div class="card-resumo {{ 'card-resumo-perigo' if epis_vencidos }}">
-    <span class="numero">{{ epis_vencidos }}</span>
-    <span class="rotulo">EPIs vencidos</span>
-  </div>
   <div class="card-resumo {{ 'card-resumo-alerta' if acidentes_recentes }}">
     <span class="numero">{{ acidentes_recentes }}</span>
     <span class="rotulo">Acidentes nos últimos 30 dias</span>
   </div>
+  <div class="card-resumo {{ 'card-resumo-alerta' if itens_vencendo }}">
+    <span class="numero">{{ itens_vencendo }}</span>
+    <span class="rotulo">Itens vencendo (30 dias)</span>
+  </div>
+  <div class="card-resumo {{ 'card-resumo-perigo' if itens_vencidos }}">
+    <span class="numero">{{ itens_vencidos }}</span>
+    <span class="rotulo">Itens vencidos</span>
+  </div>
 </div>
+
+<h2>Próximos vencimentos</h2>
 <p class="dica">
-  Este é o início do seu sistema de gestão de SST. Nas próximas fases entram
-  exames, treinamentos e os módulos de riscos psicossociais.
-  <a href="{{ url_for('acidentes.relatorio') }}">Ver relatório de acidentes</a>.
+  Reúne EPIs entregues, exames (ASO) e documentos (PCMSO, PGR...) vencidos ou
+  que vencem nos próximos 30 dias, ordenados pelo mais urgente.
+</p>
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Tipo</th>
+      <th>Descrição</th>
+      <th>Vencimento</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for alerta in alertas %}
+    <tr>
+      <td>{{ alerta.tipo }}</td>
+      <td>{{ alerta.descricao }}</td>
+      <td>{{ alerta.vencimento.strftime("%d/%m/%Y") }}</td>
+      <td>
+        {% if alerta.status == "vencido" %}
+          <span class="badge badge-perigo">Vencido</span>
+        {% else %}
+          <span class="badge badge-alerta">Vencendo</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">Nenhum item vencido ou vencendo no momento.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p class="dica">
+  Nas próximas fases entram treinamentos/certificações e os módulos de riscos
+  psicossociais.
 </p>
 {% endblock %}

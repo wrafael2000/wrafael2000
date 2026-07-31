@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} - Gestão de SST{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+<form method="post" novalidate class="card card-larga">
+  {{ form.hidden_tag() }}
+  <div class="campo">
+    {{ form.funcionario_id.label }}
+    {{ form.funcionario_id(class_="input") }}
+    {% for erro in form.funcionario_id.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.tipo.label }}
+    {{ form.tipo(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.data_exame.label }}
+    {{ form.data_exame(class_="input") }}
+    {% for erro in form.data_exame.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.data_validade.label }}
+    {{ form.data_validade(class_="input") }}
+    <small>{{ form.data_validade.description }}</small>
+  </div>
+  <div class="campo">
+    {{ form.resultado.label }}
+    {{ form.resultado(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.medico.label }}
+    {{ form.medico(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.observacao.label }}
+    {{ form.observacao(class_="input textarea") }}
+  </div>
+  {{ form.submit(class_="botao") }}
+  <a href="{{ url_for('exames.listar') }}" class="botao-secundario">Cancelar</a>
+</form>
+{% endblock %}

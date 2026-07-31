@@ -17,14 +17,18 @@ body {
 
 .navbar {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
   background: var(--cor-primaria);
   color: white;
   padding: 0.75rem 1.5rem;
 }
 
 .navbar-brand { font-weight: 700; }
+
+.navbar-links { display: flex; flex-wrap: wrap; }
 
 .navbar-links a {
   color: white;

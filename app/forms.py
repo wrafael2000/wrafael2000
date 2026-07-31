@@ -12,6 +12,8 @@ from wtforms import (
 from wtforms.validators import DataRequired, Email, Length, NumberRange, Optional
 
 from .models.acidente import GRAVIDADES, TIPOS_ACIDENTE
+from .models.documento_sst import TIPOS_DOCUMENTO
+from .models.exame import RESULTADOS, TIPOS_EXAME
 
 
 class LoginForm(FlaskForm):
@@ -71,4 +73,31 @@ class AcidenteForm(FlaskForm):
     dias_afastamento = IntegerField(
         "Dias de afastamento", default=0, validators=[Optional(), NumberRange(min=0)]
     )
+    submit = SubmitField("Salvar")
+
+
+class ExameForm(FlaskForm):
+    funcionario_id = SelectField("Funcionário", coerce=int, validators=[DataRequired()])
+    tipo = SelectField("Tipo de exame", choices=[(t, t) for t in TIPOS_EXAME], validators=[DataRequired()])
+    data_exame = DateField("Data do exame", validators=[DataRequired()])
+    data_validade = DateField(
+        "Validade",
+        validators=[Optional()],
+        description="Deixe em branco se o exame não tiver validade (ex.: demissional).",
+    )
+    resultado = SelectField("Resultado", choices=[(r, r) for r in RESULTADOS], validators=[DataRequired()])
+    medico = StringField("Médico/clínica responsável", validators=[Optional(), Length(max=120)])
+    observacao = TextAreaField("Observação", validators=[Optional()])
+    submit = SubmitField("Salvar")
+
+
+class DocumentoSSTForm(FlaskForm):
+    tipo = SelectField("Tipo", choices=[(t, t) for t in TIPOS_DOCUMENTO], validators=[DataRequired()])
+    nome = StringField("Nome do documento", validators=[DataRequired(), Length(max=150)])
+    data_emissao = DateField("Data de emissão", validators=[DataRequired()])
+    data_validade = DateField("Validade", validators=[Optional()])
+    responsavel_tecnico = StringField(
+        "Responsável técnico", validators=[Optional(), Length(max=120)]
+    )
+    observacao = TextAreaField("Observação", validators=[Optional()])
     submit = SubmitField("Salvar")
