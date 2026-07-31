@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block titulo %}Dados da Empresa - Gestão de SST{% endblock %}
+{% block conteudo %}
+<h1>Dados da empresa</h1>
+<p class="dica">
+  Essas informações aparecem no cabeçalho dos relatórios em PDF gerados pelo
+  sistema.
+</p>
+<form method="post" novalidate class="card card-larga">
+  {{ form.hidden_tag() }}
+  <div class="campo">
+    {{ form.razao_social.label }}
+    {{ form.razao_social(class_="input") }}
+    {% for erro in form.razao_social.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.nome_fantasia.label }}
+    {{ form.nome_fantasia(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.cnpj.label }}
+    {{ form.cnpj(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.endereco.label }}
+    {{ form.endereco(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.telefone.label }}
+    {{ form.telefone(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.email.label }}
+    {{ form.email(class_="input") }}
+    {% for erro in form.email.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  {{ form.submit(class_="botao") }}
+</form>
+{% endblock %}

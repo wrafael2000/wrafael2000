@@ -2,6 +2,7 @@ from .acidente import Acidente
 from .aplicacao import Aplicacao, Envio, Resposta
 from .cipa import MandatoCipa, MembroCipa
 from .documento_sst import DocumentoSST
+from .empresa import Empresa
 from .entrega_epi import EntregaEpi
 from .epi import Epi
 from .exame import Exame
@@ -40,4 +41,5 @@ __all__ = [
     "AtividadeSipat",
     "NormaRegulamentadora",
     "ItemConformidadeNR",
+    "Empresa",
 ]

@@ -38,6 +38,9 @@
         {% endif %}
       </td>
       <td class="acoes">
+        {% if documento.tem_arquivo %}
+          <a href="{{ url_for('documentos.baixar_arquivo', documento_id=documento.id) }}">Baixar arquivo</a>
+        {% endif %}
         <a href="{{ url_for('documentos.editar', documento_id=documento.id) }}">Editar</a>
         <form method="post" action="{{ url_for('documentos.excluir', documento_id=documento.id) }}"
               onsubmit="return confirm('Remover este documento?');">

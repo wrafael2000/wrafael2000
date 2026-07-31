@@ -42,6 +42,10 @@ Se você não vai programar, pule para a seção
 │   ├── extensions.py     # instâncias do SQLAlchemy, Flask-Login, CSRF
 │   ├── forms.py          # formulários (Flask-WTF)
 │   ├── cli.py             # comando `flask create-admin`
+│   ├── armazenamento.py    # localiza a pasta de dados (banco, uploads, código de recuperação)
+│   ├── recovery.py         # código de recuperação de senha
+│   ├── uploads.py          # salvar/remover arquivos anexados
+│   ├── migracoes.py        # migração leve para bancos SQLite já existentes
 │   ├── models/            # tabelas do banco (Usuario, Setor, Funcionario)
 │   ├── routes/             # rotas agrupadas por blueprint (auth, setores, funcionarios, main)
 │   ├── templates/          # páginas HTML (Jinja2)
@@ -226,15 +230,36 @@ pergunta o e-mail e a nova senha.
   possível corrigir qualquer norma e adicionar as que não vieram no seed
   (ex.: normas mais recentes)
 
+**Fase 10 — Cadastro de empresa, recuperação de senha e upload de documentos**
+- **Cadastro de empresa** (`Empresa → editar`): razão social, nome fantasia,
+  CNPJ, endereço, telefone e e-mail. O nome (fantasia, ou razão social se não
+  houver fantasia) passa a aparecer no cabeçalho dos relatórios em PDF
+- **"Esqueci minha senha" na tela de login**: gera um código de recuperação
+  na primeira vez que o sistema roda, salvo em texto puro no arquivo
+  `codigo_recuperacao.txt`, na mesma pasta do banco de dados (`dados/`, no
+  `.exe`, ou `instance/`, no modo terminal). Quem tem acesso a esse arquivo
+  consegue redefinir a senha de qualquer usuário direto pela tela de login,
+  sem precisar do `resetar_senha.py` nem de e-mail configurado — o mesmo
+  nível de acesso que já permitia usar aqueles utilitários
+- **Anexo de arquivo nos Documentos SST**: ao cadastrar/editar um documento
+  (PCMSO, PGR, etc.), é possível enviar o PDF correspondente; a listagem
+  ganha um link "Baixar arquivo". Os arquivos ficam numa pasta `uploads`
+  dentro da pasta de dados, cada um com um nome interno único
+- **Migração leve automática** (`app/migracoes.py`): como o projeto não usa
+  Flask-Migrate (para não exigir mais um comando de quem só quer abrir o
+  programa), colunas novas em tabelas já existentes são adicionadas
+  sozinhas na inicialização (`ALTER TABLE ... ADD COLUMN`), sem apagar
+  nenhuma linha — testado simulando um banco no formato antigo
+
 ## Próximos passos (ideias para continuar)
 
-O roadmap original (7 fases) mais os módulos de CIPA e biblioteca de NRs
-estão completos. Algumas ideias para quem quiser continuar evoluindo o
-projeto:
+O roadmap original (7 fases) mais os módulos de CIPA, biblioteca de NRs,
+cadastro de empresa e upload de documentos estão completos. Algumas ideias
+para quem quiser continuar evoluindo o projeto:
 
 - Login para funcionários (hoje só existe usuário administrador)
-- Upload de arquivos (anexar o PDF do PGR/PCMSO, fotos de acidentes, lista
-  de presença assinada da SIPAT)
+- Estender o upload de arquivos para outros módulos (fotos de acidentes,
+  lista de presença assinada da SIPAT), reaproveitando `app/uploads.py`
 - Notificações por e-mail quando um item estiver vencendo
 - Gráficos no dashboard (ex.: Chart.js) além das tabelas atuais
 - Migrar de SQLite para PostgreSQL para uso em produção

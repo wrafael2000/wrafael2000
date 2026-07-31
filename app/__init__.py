@@ -5,6 +5,8 @@ from flask import Flask
 from config import Config
 
 from .extensions import csrf, db, login_manager
+from .migracoes import aplicar_migracoes_leves
+from .recovery import garantir_codigo_recuperacao
 
 
 def create_app(config_class=Config):
@@ -15,6 +17,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
+    garantir_codigo_recuperacao(app)
 
     with app.app_context():
         from . import models  # noqa: F401  (garante que os models sejam registrados)
@@ -24,6 +27,7 @@ def create_app(config_class=Config):
         from .routes.auth import auth_bp
         from .routes.cipa import cipa_bp
         from .routes.documentos import documentos_bp
+        from .routes.empresa import empresa_bp
         from .routes.entregas_epi import entregas_epi_bp
         from .routes.epis import epis_bp
         from .routes.exames import exames_bp
@@ -56,9 +60,11 @@ def create_app(config_class=Config):
         app.register_blueprint(reunioes_cipa_bp)
         app.register_blueprint(sipat_bp)
         app.register_blueprint(normas_bp)
+        app.register_blueprint(empresa_bp)
 
         registrar_comandos(app)
 
         db.create_all()
+        aplicar_migracoes_leves(db)
 
     return app

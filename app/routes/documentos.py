@@ -1,11 +1,24 @@
-from flask import Blueprint, flash, redirect, render_template, url_for
+from flask import Blueprint, abort, flash, redirect, render_template, send_from_directory, url_for
 from flask_login import login_required
 
 from ..extensions import db
 from ..forms import DocumentoSSTForm
 from ..models import DocumentoSST
+from ..uploads import pasta_uploads, remover_arquivo, salvar_arquivo
 
 documentos_bp = Blueprint("documentos", __name__, url_prefix="/documentos")
+
+
+def _processar_arquivo(form, documento):
+    arquivo_enviado = form.arquivo.data
+    if not arquivo_enviado or not getattr(arquivo_enviado, "filename", ""):
+        return
+
+    if documento.arquivo_nome_armazenado:
+        remover_arquivo(documento.arquivo_nome_armazenado)
+
+    documento.arquivo_nome_original = arquivo_enviado.filename
+    documento.arquivo_nome_armazenado = salvar_arquivo(arquivo_enviado)
 
 
 @documentos_bp.route("/")
@@ -28,6 +41,7 @@ def novo():
             responsavel_tecnico=form.responsavel_tecnico.data,
             observacao=form.observacao.data,
         )
+        _processar_arquivo(form, documento)
         db.session.add(documento)
         db.session.commit()
         flash("Documento cadastrado com sucesso.", "success")
@@ -47,6 +61,7 @@ def editar(documento_id):
         documento.data_validade = form.data_validade.data
         documento.responsavel_tecnico = form.responsavel_tecnico.data
         documento.observacao = form.observacao.data
+        _processar_arquivo(form, documento)
         db.session.commit()
         flash("Documento atualizado com sucesso.", "success")
         return redirect(url_for("documentos.listar"))
@@ -57,7 +72,22 @@ def editar(documento_id):
 @login_required
 def excluir(documento_id):
     documento = DocumentoSST.query.get_or_404(documento_id)
+    remover_arquivo(documento.arquivo_nome_armazenado)
     db.session.delete(documento)
     db.session.commit()
     flash("Documento removido.", "info")
     return redirect(url_for("documentos.listar"))
+
+
+@documentos_bp.route("/<int:documento_id>/arquivo")
+@login_required
+def baixar_arquivo(documento_id):
+    documento = DocumentoSST.query.get_or_404(documento_id)
+    if not documento.tem_arquivo:
+        abort(404)
+    return send_from_directory(
+        pasta_uploads(),
+        documento.arquivo_nome_armazenado,
+        as_attachment=True,
+        download_name=documento.arquivo_nome_original,
+    )

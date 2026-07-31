@@ -18,5 +18,8 @@
     </div>
     {{ form.submit(class_="botao") }}
   </form>
+  <p class="link-esqueci-senha">
+    <a href="{{ url_for('auth.esqueci_senha') }}">Esqueci minha senha</a>
+  </p>
 </div>
 {% endblock %}
