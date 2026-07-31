@@ -63,17 +63,22 @@ Acesse **http://127.0.0.1:5000** e faça login com o usuário criado no passo 4.
 O banco de dados SQLite é criado automaticamente em `instance/sst.db` na
 primeira execução.
 
-## Módulos desta primeira fase (Fase 1)
+## Módulos implementados
 
+**Fase 1 — Base**
 - Login de administrador
 - Cadastro, edição e remoção de **setores**
 - Cadastro, edição e remoção de **funcionários** (vinculados a um setor)
-- Dashboard inicial com totais de funcionários ativos e setores
+
+**Fase 2 — Controle de EPIs**
+- Catálogo de EPIs (nome, CA, vida útil em dias)
+- Registro de entregas de EPI a funcionários, com cálculo automático da data
+  de validade a partir da vida útil do equipamento
+- Status por entrega: válido / vencendo (30 dias) / vencido / sem validade
+- Dashboard com totais gerais e alertas de EPIs vencidos/vencendo
 
 ## Roadmap (próximas fases)
 
-- **Fase 2 — Controle de EPIs**: cadastro de equipamentos, entrega a
-  funcionários, datas de validade/troca e alertas de vencimento.
 - **Fase 3 — Acidentes e incidentes**: registro de ocorrências (data, local,
   gravidade, causa, medidas tomadas) e relatório.
 - **Fase 4 — Exames e documentos obrigatórios**: controle de ASO, PCMSO, PGR

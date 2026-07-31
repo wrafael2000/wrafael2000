@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block titulo %}Entregas de EPI - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Entregas de EPI</h1>
+  <a href="{{ url_for('entregas_epi.nova') }}" class="botao">+ Nova entrega</a>
+</div>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Funcionário</th>
+      <th>EPI</th>
+      <th>Entrega</th>
+      <th>Validade</th>
+      <th>Status</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entrega in entregas %}
+    <tr>
+      <td>{{ entrega.funcionario.nome }}</td>
+      <td>{{ entrega.epi.nome }}</td>
+      <td>{{ entrega.data_entrega.strftime("%d/%m/%Y") }}</td>
+      <td>{{ entrega.data_validade.strftime("%d/%m/%Y") if entrega.data_validade else "-" }}</td>
+      <td>
+        {% if entrega.status == "vencido" %}
+          <span class="badge badge-perigo">Vencido</span>
+        {% elif entrega.status == "vencendo" %}
+          <span class="badge badge-alerta">Vencendo</span>
+        {% elif entrega.status == "valido" %}
+          <span class="badge badge-sucesso">Válido</span>
+        {% else %}
+          <span class="badge badge-neutro">Sem validade</span>
+        {% endif %}
+      </td>
+      <td class="acoes">
+        <a href="{{ url_for('entregas_epi.editar', entrega_id=entrega.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('entregas_epi.excluir', entrega_id=entrega.id) }}"
+              onsubmit="return confirm('Remover esta entrega?');">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">Nenhuma entrega registrada ainda.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

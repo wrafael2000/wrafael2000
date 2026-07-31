@@ -1,7 +1,9 @@
+from datetime import date, timedelta
+
 from flask import Blueprint, redirect, render_template, url_for
 from flask_login import login_required
 
-from ..models import Funcionario, Setor
+from ..models import EntregaEpi, Funcionario, Setor
 
 main_bp = Blueprint("main", __name__)
 
@@ -16,8 +18,18 @@ def index():
 def dashboard():
     total_funcionarios = Funcionario.query.filter_by(ativo=True).count()
     total_setores = Setor.query.count()
+
+    hoje = date.today()
+    limite_alerta = hoje + timedelta(days=EntregaEpi.DIAS_ALERTA_VENCIMENTO)
+    epis_vencidos = EntregaEpi.query.filter(EntregaEpi.data_validade < hoje).count()
+    epis_vencendo = EntregaEpi.query.filter(
+        EntregaEpi.data_validade >= hoje, EntregaEpi.data_validade <= limite_alerta
+    ).count()
+
     return render_template(
         "dashboard.html",
         total_funcionarios=total_funcionarios,
         total_setores=total_setores,
+        epis_vencidos=epis_vencidos,
+        epis_vencendo=epis_vencendo,
     )

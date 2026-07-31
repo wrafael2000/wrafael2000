@@ -11,10 +11,17 @@
     <span class="numero">{{ total_setores }}</span>
     <span class="rotulo">Setores cadastrados</span>
   </div>
+  <div class="card-resumo {{ 'card-resumo-alerta' if epis_vencendo }}">
+    <span class="numero">{{ epis_vencendo }}</span>
+    <span class="rotulo">EPIs vencendo em 30 dias</span>
+  </div>
+  <div class="card-resumo {{ 'card-resumo-perigo' if epis_vencidos }}">
+    <span class="numero">{{ epis_vencidos }}</span>
+    <span class="rotulo">EPIs vencidos</span>
+  </div>
 </div>
 <p class="dica">
   Este é o início do seu sistema de gestão de SST. Nas próximas fases entram
-  controle de EPIs, acidentes, exames, treinamentos e os módulos de riscos
-  psicossociais.
+  acidentes, exames, treinamentos e os módulos de riscos psicossociais.
 </p>
 {% endblock %}

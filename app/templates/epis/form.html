@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} - Gestão de SST{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+<form method="post" novalidate class="card">
+  {{ form.hidden_tag() }}
+  <div class="campo">
+    {{ form.nome.label }}
+    {{ form.nome(class_="input") }}
+    {% for erro in form.nome.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  <div class="campo">
+    {{ form.ca.label }}
+    {{ form.ca(class_="input") }}
+  </div>
+  <div class="campo">
+    {{ form.validade_dias.label }}
+    {{ form.validade_dias(class_="input") }}
+    <small>{{ form.validade_dias.description }}</small>
+    {% for erro in form.validade_dias.errors %}<span class="erro">{{ erro }}</span>{% endfor %}
+  </div>
+  {{ form.submit(class_="botao") }}
+  <a href="{{ url_for('epis.listar') }}" class="botao-secundario">Cancelar</a>
+</form>
+{% endblock %}
