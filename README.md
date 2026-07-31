@@ -34,7 +34,8 @@ Se você não vai programar, pule para a seção
 ├── run.py              # ponto de entrada da aplicação (uso via terminal/desenvolvimento)
 ├── desktop_run.py       # ponto de entrada da versão desktop (.exe, "clique e use")
 ├── build_windows.bat    # gera o .exe a partir do desktop_run.py (rodar 1x no Windows)
-├── config.py             # configurações (lidas de variáveis de ambiente)
+├── resetar_senha.py      # utilitário para redefinir senha sem apagar dados
+├── config.py               # configurações (lidas de variáveis de ambiente)
 ├── requirements.txt
 ├── app/
 │   ├── __init__.py      # application factory (cria e configura o Flask app)
@@ -109,8 +110,24 @@ Os dados ficam salvos numa pasta `dados` ao lado do `.exe` — não apague essa
 pasta, é onde estão os cadastros. Para levar o sistema para outro
 computador, copie o `.exe` **e** a pasta `dados` juntos.
 
-O banco de dados SQLite é criado automaticamente em `instance/sst.db` na
-primeira execução.
+### Esqueci a senha do administrador
+
+Sem apagar nenhum dado, dá para redefinir a senha de um usuário já existente.
+Duas formas, dependendo se você já gerou o `.exe` mais recente ou não:
+
+**Se você já reconstruiu o `.exe` depois desta atualização:**
+```
+.\dist\SST-Saude-Seguranca-Trabalho.exe --resetar-senha
+```
+(rode isso no PowerShell, na pasta onde está o `.exe`)
+
+**Se ainda não reconstruiu** (ou quer resolver sem esperar o build de novo):
+na pasta do projeto, use o Python que já ficou instalado durante o build:
+```
+.venv_build\Scripts\python.exe resetar_senha.py
+```
+O script procura o banco de dados sozinho (em `dados\` ou `dist\dados\`) e
+pergunta o e-mail e a nova senha.
 
 ## Módulos implementados
 
