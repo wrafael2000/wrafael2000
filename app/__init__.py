@@ -36,6 +36,7 @@ def create_app(config_class=Config):
         from .routes.funcionarios import funcionarios_bp
         from .routes.main import main_bp
         from .routes.normas import normas_bp
+        from .routes.pcmso import pcmso_bp
         from .routes.pesquisa_publica import pesquisa_publica_bp
         from .routes.pgr import pgr_bp
         from .routes.questionarios import questionarios_bp
@@ -67,6 +68,7 @@ def create_app(config_class=Config):
         app.register_blueprint(dds_bp)
         app.register_blueprint(apr_bp)
         app.register_blueprint(pgr_bp)
+        app.register_blueprint(pcmso_bp)
 
         registrar_comandos(app)
 

@@ -303,12 +303,21 @@ pergunta o e-mail e a nova senha.
   (com aviso de que precisa ser revisado e assinado por um engenheiro de
   segurança do trabalho) e salva automaticamente como um registro em
   Documentos SST — gerar de novo atualiza o mesmo arquivo, sem duplicar
+- **PCMSO — Programa de Controle Médico de Saúde Ocupacional** (acessível a
+  partir de `Documentos → Gerador de PCMSO`, conforme a NR-07): você cria o
+  cabeçalho (título, médico coordenador e CRM, datas, diretrizes gerais
+  opcionais) e depois cadastra o quadro de funções — por setor, a função,
+  os riscos ocupacionais associados, os exames clínicos/complementares
+  indicados e a periodicidade em meses. O PDF gerado inclui esse quadro
+  mais uma seção com a relação de exames (ASO) já registrados no sistema
+  — dado real, puxado automaticamente, não digitado de novo — e também é
+  salvo/atualizado como um registro em Documentos SST
 - **Sobre o gerador**: em todos os casos, o sistema só monta o documento no
   layout padrão com os dados já cadastrados (empresa, setores,
-  funcionários) — o conteúdo técnico (temas, riscos, medidas de controle)
-  é sempre digitado por quem está usando o sistema. Isso vale também para
-  os próximos geradores (PCMSO, LTCAT e PPP), que serão adicionados em uma
-  próxima etapa
+  funcionários, exames) — o conteúdo técnico (temas, riscos, medidas de
+  controle, diretrizes clínicas) é sempre digitado por quem está usando o
+  sistema. Isso vale também para os próximos geradores (LTCAT e PPP), que
+  serão adicionados em uma próxima etapa
 
 ## Próximos passos (ideias para continuar)
 

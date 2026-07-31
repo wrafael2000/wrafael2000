@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block titulo %}Gerador de PCMSO - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Gerador de PCMSO</h1>
+  <a href="{{ url_for('pcmso.novo') }}" class="botao">+ Novo PCMSO</a>
+</div>
+<p class="dica">
+  O PCMSO (Programa de Controle Médico de Saúde Ocupacional, NR-07) montado aqui usa o
+  quadro de funções/riscos/exames que você cadastrar, além da relação de exames (ASO) já
+  registrados no sistema. O PDF gerado precisa ser revisado e assinado pelo médico
+  coordenador antes de virar o documento oficial da empresa.
+</p>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Título</th>
+      <th>Médico coordenador</th>
+      <th>Elaboração</th>
+      <th>Validade</th>
+      <th>Itens</th>
+      <th>PDF gerado</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for registro in registros %}
+    <tr>
+      <td>{{ registro.titulo }}</td>
+      <td>{{ registro.medico_coordenador }}</td>
+      <td>{{ registro.data_elaboracao.strftime("%d/%m/%Y") }}</td>
+      <td>{{ registro.data_validade.strftime("%d/%m/%Y") if registro.data_validade else "-" }}</td>
+      <td>{{ registro.itens|length }}</td>
+      <td>
+        {% if registro.documento and registro.documento.tem_arquivo %}
+          <span class="badge badge-sucesso">Sim</span>
+        {% else %}
+          <span class="badge badge-neutro">Ainda não</span>
+        {% endif %}
+      </td>
+      <td class="acoes">
+        <a href="{{ url_for('pcmso.ver', pcmso_id=registro.id) }}">Ver / gerenciar</a>
+        <form method="post" action="{{ url_for('pcmso.excluir', pcmso_id=registro.id) }}"
+              onsubmit="return confirm('Remover este PCMSO e seus itens?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7">Nenhum PCMSO cadastrado ainda.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ url_for('documentos.listar') }}" class="botao-secundario">Voltar para Documentos SST</a>
+{% endblock %}

@@ -10,7 +10,7 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import cm
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
-from .models import Empresa
+from .models import Empresa, Exame
 
 _COR_PRIMARIA = colors.HexColor("#1d6f42")
 _COR_FUNDO_CABECALHO = colors.HexColor("#e3f3e8")
@@ -304,6 +304,82 @@ def gerar_pdf_pgr(pgr):
         )
     else:
         elementos.append(Paragraph("Nenhuma ação cadastrada.", _estilo_texto))
+
+    doc.build(elementos)
+    buffer.seek(0)
+    return buffer
+
+
+_AVISO_PCMSO = (
+    "Este documento foi gerado automaticamente pelo sistema a partir dos dados "
+    "cadastrados e não substitui a elaboração, revisão e assinatura do médico "
+    "coordenador do PCMSO, conforme exige a NR-07. Revise todo o conteúdo antes "
+    "de considerá-lo o PCMSO oficial da empresa."
+)
+
+
+def gerar_pdf_pcmso(pcmso):
+    buffer = io.BytesIO()
+    doc, elementos = _novo_documento(buffer, "Programa de Controle Médico de Saúde Ocupacional (PCMSO)")
+
+    elementos.append(_paragrafo_livre(_AVISO_PCMSO, _estilo_aviso))
+
+    linhas_cabecalho = [
+        ["Título", pcmso.titulo],
+        ["Médico coordenador", pcmso.medico_coordenador],
+        ["Data de elaboração", pcmso.data_elaboracao.strftime("%d/%m/%Y")],
+        ["Validade / próxima revisão", pcmso.data_validade.strftime("%d/%m/%Y") if pcmso.data_validade else "Não informada"],
+    ]
+    if pcmso.medico_coordenador_crm:
+        linhas_cabecalho.insert(2, ["CRM do médico coordenador", pcmso.medico_coordenador_crm])
+    elementos.append(_tabela(["Campo", "Valor"], linhas_cabecalho, larguras=[5 * cm, 11 * cm]))
+
+    if pcmso.diretrizes:
+        elementos.append(Paragraph("Diretrizes gerais", _estilo_secao))
+        elementos.append(_paragrafo_livre(pcmso.diretrizes))
+
+    elementos.append(Paragraph("Quadro de funções, riscos e exames", _estilo_secao))
+    if pcmso.itens:
+        elementos.append(
+            _tabela(
+                ["Setor", "Função", "Riscos ocupacionais", "Exames indicados", "Periodicidade"],
+                [
+                    [
+                        item.setor.nome,
+                        item.funcao,
+                        item.riscos_ocupacionais,
+                        item.exames_indicados,
+                        f"{item.periodicidade_meses} meses",
+                    ]
+                    for item in pcmso.itens
+                ],
+                larguras=[2.3 * cm, 2.7 * cm, 4.3 * cm, 4.3 * cm, 2.4 * cm],
+            )
+        )
+    else:
+        elementos.append(Paragraph("Nenhum item cadastrado.", _estilo_texto))
+
+    elementos.append(Paragraph("Exames ocupacionais já registrados no sistema", _estilo_secao))
+    exames = Exame.query.join(Exame.funcionario).order_by(Exame.data_exame.desc()).limit(100).all()
+    if exames:
+        elementos.append(
+            _tabela(
+                ["Funcionário", "Tipo", "Data", "Resultado", "Validade"],
+                [
+                    [
+                        exame.funcionario.nome,
+                        exame.tipo,
+                        exame.data_exame.strftime("%d/%m/%Y"),
+                        exame.resultado,
+                        exame.data_validade.strftime("%d/%m/%Y") if exame.data_validade else "-",
+                    ]
+                    for exame in exames
+                ],
+                larguras=[5 * cm, 3.5 * cm, 2.5 * cm, 2.5 * cm, 2.5 * cm],
+            )
+        )
+    else:
+        elementos.append(Paragraph("Nenhum exame (ASO) registrado no sistema ainda.", _estilo_texto))
 
     doc.build(elementos)
     buffer.seek(0)

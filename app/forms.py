@@ -367,6 +367,40 @@ class ItemRiscoPgrForm(FlaskForm):
     submit = SubmitField("Salvar item")
 
 
+class PcmsoForm(FlaskForm):
+    titulo = StringField("Título", validators=[DataRequired(), Length(max=150)])
+    medico_coordenador = StringField(
+        "Médico coordenador", validators=[DataRequired(), Length(max=120)]
+    )
+    medico_coordenador_crm = StringField(
+        "CRM do médico coordenador", validators=[Optional(), Length(max=60)]
+    )
+    data_elaboracao = DateField("Data de elaboração", validators=[DataRequired()])
+    data_validade = DateField(
+        "Validade / próxima revisão",
+        validators=[Optional()],
+        description="O PCMSO costuma ser revisado a cada ano.",
+    )
+    diretrizes = TextAreaField("Diretrizes gerais (opcional)", validators=[Optional()])
+    submit = SubmitField("Salvar")
+
+
+class ItemPcmsoForm(FlaskForm):
+    setor_id = SelectField("Setor", coerce=int, validators=[DataRequired()])
+    funcao = StringField("Função/cargo", validators=[DataRequired(), Length(max=150)])
+    riscos_ocupacionais = TextAreaField(
+        "Riscos ocupacionais associados", validators=[DataRequired()]
+    )
+    exames_indicados = TextAreaField(
+        "Exames clínicos e complementares indicados", validators=[DataRequired()]
+    )
+    periodicidade_meses = IntegerField(
+        "Periodicidade (em meses)", validators=[DataRequired(), NumberRange(min=1)]
+    )
+    observacoes = TextAreaField("Observações (opcional)", validators=[Optional()])
+    submit = SubmitField("Salvar item")
+
+
 class EsqueciSenhaForm(FlaskForm):
     email = StringField("E-mail", validators=[DataRequired(), Email()])
     codigo_recuperacao = StringField("Código de recuperação", validators=[DataRequired()])

@@ -10,6 +10,7 @@ from .epi import Epi
 from .exame import Exame
 from .funcionario import Funcionario
 from .norma_regulamentadora import ItemConformidadeNR, NormaRegulamentadora
+from .pcmso import ItemPcmso, Pcmso
 from .pgr import ItemRiscoPgr, Pgr
 from .plano_acao_psicossocial import PlanoAcaoPsicossocial
 from .questionario import Pergunta, Questionario
@@ -52,4 +53,6 @@ __all__ = [
     "EtapaApr",
     "Pgr",
     "ItemRiscoPgr",
+    "Pcmso",
+    "ItemPcmso",
 ]

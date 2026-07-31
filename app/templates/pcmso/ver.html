@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block titulo %}{{ pcmso.titulo }} - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>{{ pcmso.titulo }}</h1>
+  <div style="display: flex; gap: 0.75rem;">
+    <a href="{{ url_for('pcmso.editar', pcmso_id=pcmso.id) }}" class="botao-secundario">Editar</a>
+    <a href="{{ url_for('pcmso.listar') }}" class="botao-secundario">Voltar</a>
+  </div>
+</div>
+
+<div class="card card-larga">
+  <p><strong>Médico coordenador:</strong> {{ pcmso.medico_coordenador }}{% if pcmso.medico_coordenador_crm %} ({{ pcmso.medico_coordenador_crm }}){% endif %}</p>
+  <p><strong>Data de elaboração:</strong> {{ pcmso.data_elaboracao.strftime("%d/%m/%Y") }}
+     &nbsp;·&nbsp;
+     <strong>Validade:</strong> {{ pcmso.data_validade.strftime("%d/%m/%Y") if pcmso.data_validade else "Não informada" }}</p>
+  {% if pcmso.diretrizes %}<p><strong>Diretrizes gerais:</strong> {{ pcmso.diretrizes }}</p>{% endif %}
+</div>
+
+<div class="card card-larga">
+  <h2>Gerar PDF</h2>
+  <p class="dica">
+    Monta o PDF do PCMSO com o quadro abaixo e a relação de exames (ASO) já registrados no
+    sistema, e salva (ou atualiza) o arquivo em Documentos SST. Revise sempre o PDF antes de
+    considerá-lo o documento oficial da empresa.
+  </p>
+  {% if pcmso.documento and pcmso.documento.tem_arquivo %}
+    <p><span class="badge badge-sucesso">PDF já gerado</span>
+      <a href="{{ url_for('documentos.baixar_arquivo', documento_id=pcmso.documento.id) }}">Baixar PDF</a>
+    </p>
+  {% endif %}
+  <form method="post" action="{{ url_for('pcmso.gerar', pcmso_id=pcmso.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="botao">
+      {{ "Gerar novamente e atualizar em Documentos SST" if pcmso.documento else "Gerar PDF e salvar em Documentos SST" }}
+    </button>
+  </form>
+</div>
+
+<div class="cabecalho-pagina">
+  <h2>Quadro de funções, riscos e exames</h2>
+  <a href="{{ url_for('pcmso.novo_item', pcmso_id=pcmso.id) }}" class="botao">+ Adicionar item</a>
+</div>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Setor</th>
+      <th>Função</th>
+      <th>Riscos ocupacionais</th>
+      <th>Exames indicados</th>
+      <th>Periodicidade</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in pcmso.itens %}
+    <tr>
+      <td>{{ item.setor.nome }}</td>
+      <td>{{ item.funcao }}</td>
+      <td>{{ item.riscos_ocupacionais }}</td>
+      <td>{{ item.exames_indicados }}</td>
+      <td>{{ item.periodicidade_meses }} meses</td>
+      <td class="acoes">
+        <a href="{{ url_for('pcmso.editar_item', item_id=item.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('pcmso.excluir_item', item_id=item.id) }}"
+              onsubmit="return confirm('Remover este item?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">Nenhum item cadastrado. Adicione acima antes de gerar o PDF.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
