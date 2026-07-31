@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from flask import Blueprint, redirect, render_template, url_for
 from flask_login import login_required
 
-from ..models import EntregaEpi, Funcionario, Setor
+from ..models import Acidente, EntregaEpi, Funcionario, Setor
 
 main_bp = Blueprint("main", __name__)
 
@@ -26,10 +26,14 @@ def dashboard():
         EntregaEpi.data_validade >= hoje, EntregaEpi.data_validade <= limite_alerta
     ).count()
 
+    limite_30_dias = hoje - timedelta(days=30)
+    acidentes_recentes = Acidente.query.filter(Acidente.data >= limite_30_dias).count()
+
     return render_template(
         "dashboard.html",
         total_funcionarios=total_funcionarios,
         total_setores=total_setores,
         epis_vencidos=epis_vencidos,
         epis_vencendo=epis_vencendo,
+        acidentes_recentes=acidentes_recentes,
     )

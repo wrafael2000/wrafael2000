@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block titulo %}Acidentes - Gestão de SST{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+  <h1>Acidentes e incidentes</h1>
+  <div>
+    <a href="{{ url_for('acidentes.relatorio') }}" class="botao-secundario">Ver relatório</a>
+    <a href="{{ url_for('acidentes.novo') }}" class="botao">+ Nova ocorrência</a>
+  </div>
+</div>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Funcionário</th>
+      <th>Local</th>
+      <th>Tipo</th>
+      <th>Gravidade</th>
+      <th>Afastamento</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for acidente in acidentes %}
+    <tr>
+      <td>{{ acidente.data.strftime("%d/%m/%Y") }}</td>
+      <td>{{ acidente.funcionario.nome }}</td>
+      <td>{{ acidente.local }}</td>
+      <td>{{ acidente.tipo }}</td>
+      <td>
+        {% if acidente.gravidade in ("Grave", "Fatal") %}
+          <span class="badge badge-perigo">{{ acidente.gravidade }}</span>
+        {% elif acidente.gravidade == "Moderada" %}
+          <span class="badge badge-alerta">{{ acidente.gravidade }}</span>
+        {% else %}
+          <span class="badge badge-neutro">{{ acidente.gravidade }}</span>
+        {% endif %}
+      </td>
+      <td>{{ acidente.dias_afastamento or 0 }} dia(s)</td>
+      <td class="acoes">
+        <a href="{{ url_for('acidentes.editar', acidente_id=acidente.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('acidentes.excluir', acidente_id=acidente.id) }}"
+              onsubmit="return confirm('Remover esta ocorrência?');">
+          <button type="submit" class="link-botao">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7">Nenhuma ocorrência registrada ainda.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

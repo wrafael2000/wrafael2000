@@ -19,9 +19,14 @@
     <span class="numero">{{ epis_vencidos }}</span>
     <span class="rotulo">EPIs vencidos</span>
   </div>
+  <div class="card-resumo {{ 'card-resumo-alerta' if acidentes_recentes }}">
+    <span class="numero">{{ acidentes_recentes }}</span>
+    <span class="rotulo">Acidentes nos últimos 30 dias</span>
+  </div>
 </div>
 <p class="dica">
   Este é o início do seu sistema de gestão de SST. Nas próximas fases entram
-  acidentes, exames, treinamentos e os módulos de riscos psicossociais.
+  exames, treinamentos e os módulos de riscos psicossociais.
+  <a href="{{ url_for('acidentes.relatorio') }}">Ver relatório de acidentes</a>.
 </p>
 {% endblock %}

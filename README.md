@@ -77,10 +77,15 @@ primeira execução.
 - Status por entrega: válido / vencendo (30 dias) / vencido / sem validade
 - Dashboard com totais gerais e alertas de EPIs vencidos/vencendo
 
+**Fase 3 — Acidentes e incidentes**
+- Registro de ocorrências (funcionário, data, local, tipo, gravidade,
+  descrição, causa, medidas tomadas, dias de afastamento)
+- Relatório com totais por gravidade, por tipo e por mês (últimos 12 meses),
+  além do total acumulado de dias de afastamento
+- Dashboard com contador de acidentes nos últimos 30 dias
+
 ## Roadmap (próximas fases)
 
-- **Fase 3 — Acidentes e incidentes**: registro de ocorrências (data, local,
-  gravidade, causa, medidas tomadas) e relatório.
 - **Fase 4 — Exames e documentos obrigatórios**: controle de ASO, PCMSO, PGR
   e prazos de validade, com alertas.
 - **Fase 5 — Treinamentos e certificações**: controle de treinamentos de NRs

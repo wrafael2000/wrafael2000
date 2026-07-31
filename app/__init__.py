@@ -19,6 +19,7 @@ def create_app(config_class=Config):
     with app.app_context():
         from . import models  # noqa: F401  (garante que os models sejam registrados)
         from .cli import registrar_comandos
+        from .routes.acidentes import acidentes_bp
         from .routes.auth import auth_bp
         from .routes.entregas_epi import entregas_epi_bp
         from .routes.epis import epis_bp
@@ -32,6 +33,7 @@ def create_app(config_class=Config):
         app.register_blueprint(funcionarios_bp)
         app.register_blueprint(epis_bp)
         app.register_blueprint(entregas_epi_bp)
+        app.register_blueprint(acidentes_bp)
 
         registrar_comandos(app)
 

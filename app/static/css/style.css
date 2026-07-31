@@ -63,7 +63,15 @@ label { font-weight: 600; font-size: 0.9rem; }
   border: 1px solid var(--cor-borda);
   border-radius: 6px;
   font-size: 1rem;
+  font-family: inherit;
 }
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.card-larga { max-width: 600px; }
 
 .botao, .botao-secundario, .link-botao {
   display: inline-block;
@@ -108,7 +116,7 @@ label { font-weight: 600; font-size: 0.9rem; }
 }
 .tabela .acoes { display: flex; gap: 0.75rem; }
 
-.cards-resumo { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+.cards-resumo { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
 .card-resumo {
   background: white;
   border: 1px solid var(--cor-borda);
