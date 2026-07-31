@@ -17,6 +17,8 @@ class DocumentoSST(db.Model):
     data_validade = db.Column(db.Date)
     responsavel_tecnico = db.Column(db.String(120))
     observacao = db.Column(db.Text)
+    arquivo_nome_original = db.Column(db.String(255))
+    arquivo_nome_armazenado = db.Column(db.String(255))
 
     DIAS_ALERTA_VENCIMENTO = 30
 
@@ -30,6 +32,10 @@ class DocumentoSST(db.Model):
         if self.data_validade <= hoje + timedelta(days=self.DIAS_ALERTA_VENCIMENTO):
             return "vencendo"
         return "valido"
+
+    @property
+    def tem_arquivo(self):
+        return bool(self.arquivo_nome_armazenado)
 
     def __repr__(self):
         return f"<DocumentoSST {self.tipo} - {self.nome}>"

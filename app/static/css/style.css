@@ -152,6 +152,8 @@ label { font-weight: 600; font-size: 0.9rem; }
 .link-publico { font-size: 0.85rem; color: #5a6b62; background: #f4f6f5; }
 .link-publico code { word-break: break-all; }
 
+.link-esqueci-senha { text-align: center; margin-top: 0.75rem; font-size: 0.9rem; }
+
 .pergunta-publica { border-bottom: 1px solid var(--cor-borda); padding-bottom: 0.75rem; }
 .pergunta-publica label { font-weight: 400; }
 .escala-radios { display: flex; gap: 1rem; margin-top: 0.4rem; }

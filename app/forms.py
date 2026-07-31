@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed, FileField
 from wtforms import (
     BooleanField,
     DateField,
@@ -11,7 +12,7 @@ from wtforms import (
     TextAreaField,
     TimeField,
 )
-from wtforms.validators import DataRequired, Email, Length, NumberRange, Optional
+from wtforms.validators import DataRequired, Email, EqualTo, Length, NumberRange, Optional
 
 from .models.acidente import GRAVIDADES, TIPOS_ACIDENTE
 from .models.cipa import CARGOS_CIPA, TIPOS_REPRESENTACAO
@@ -107,6 +108,10 @@ class DocumentoSSTForm(FlaskForm):
         "Responsável técnico", validators=[Optional(), Length(max=120)]
     )
     observacao = TextAreaField("Observação", validators=[Optional()])
+    arquivo = FileField(
+        "Arquivo (PDF, opcional)",
+        validators=[Optional(), FileAllowed(["pdf"], "Envie um arquivo PDF.")],
+    )
     submit = SubmitField("Salvar")
 
 
@@ -252,3 +257,26 @@ class ItemConformidadeNRForm(FlaskForm):
     prazo = DateField("Prazo", validators=[Optional()])
     observacao = TextAreaField("Observação", validators=[Optional()])
     submit = SubmitField("Salvar")
+
+
+class EmpresaForm(FlaskForm):
+    razao_social = StringField("Razão social", validators=[DataRequired(), Length(max=200)])
+    nome_fantasia = StringField("Nome fantasia", validators=[Optional(), Length(max=200)])
+    cnpj = StringField("CNPJ", validators=[Optional(), Length(max=20)])
+    endereco = StringField("Endereço", validators=[Optional(), Length(max=255)])
+    telefone = StringField("Telefone", validators=[Optional(), Length(max=30)])
+    email = StringField("E-mail", validators=[Optional(), Email(), Length(max=120)])
+    submit = SubmitField("Salvar")
+
+
+class EsqueciSenhaForm(FlaskForm):
+    email = StringField("E-mail", validators=[DataRequired(), Email()])
+    codigo_recuperacao = StringField("Código de recuperação", validators=[DataRequired()])
+    nova_senha = PasswordField(
+        "Nova senha", validators=[DataRequired(), Length(min=6, message="Use pelo menos 6 caracteres.")]
+    )
+    confirmar_senha = PasswordField(
+        "Confirme a nova senha",
+        validators=[DataRequired(), EqualTo("nova_senha", message="As senhas não coincidem.")],
+    )
+    submit = SubmitField("Redefinir senha")

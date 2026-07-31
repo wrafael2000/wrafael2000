@@ -9,6 +9,8 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import cm
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
+from .models import Empresa
+
 _COR_PRIMARIA = colors.HexColor("#1d6f42")
 _COR_FUNDO_CABECALHO = colors.HexColor("#e3f3e8")
 
@@ -34,10 +36,16 @@ def _novo_documento(buffer, titulo):
         leftMargin=2 * cm,
         rightMargin=2 * cm,
     )
-    elementos = [
-        Paragraph(titulo, _estilo_titulo),
-        Paragraph(f"Gerado em {date.today().strftime('%d/%m/%Y')}", _estilo_subtitulo),
-    ]
+    elementos = [Paragraph(titulo, _estilo_titulo)]
+
+    empresa = Empresa.obter_ou_none()
+    if empresa:
+        nome_empresa = empresa.nome_fantasia or empresa.razao_social
+        elementos.append(Paragraph(nome_empresa, _estilo_subtitulo))
+
+    elementos.append(
+        Paragraph(f"Gerado em {date.today().strftime('%d/%m/%Y')}", _estilo_subtitulo)
+    )
     return doc, elementos
 
 
