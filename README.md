@@ -2,11 +2,13 @@
 
 Sistema web para apoiar a gestão de Saúde e Segurança do Trabalho (SST) de uma
 empresa: controle de funcionários e setores, EPIs, acidentes/incidentes,
-exames e documentos obrigatórios, treinamentos, e (em fases futuras) módulos
-de riscos psicossociais.
+exames e documentos obrigatórios, treinamentos, riscos psicossociais/clima
+organizacional e relatórios em PDF.
 
-Este projeto está sendo construído **em fases**, para servir também como
-material de aprendizado de programação web com Python.
+Este projeto foi construído **em fases**, para servir também como material
+de aprendizado de programação web com Python. As 7 fases do roadmap
+original estão completas — veja "Próximos passos" no final deste README
+para ideias de continuação.
 
 ## Stack tecnológica
 
@@ -16,6 +18,7 @@ material de aprendizado de programação web com Python.
 | Banco de dados | **SQLite + SQLAlchemy** | Um único arquivo, sem precisar instalar servidor de banco; fácil migrar para PostgreSQL depois |
 | Autenticação | **Flask-Login** + hash de senha (Werkzeug) | Login simples e seguro |
 | Formulários | **Flask-WTF** | Proteção contra CSRF e validação de formulários |
+| Relatórios em PDF | **ReportLab** | Geração de PDF sem dependências externas de sistema |
 | Front-end | HTML + CSS simples (sem framework JS por enquanto) | Foco em aprender o backend primeiro |
 
 ## Estrutura do projeto
@@ -126,9 +129,29 @@ primeira execução.
 - Plano de ação simples vinculado a cada aplicação (ação, responsável,
   prazo, status)
 
-## Roadmap (próximas fases)
+**Fase 7 — Dashboard consolidado e relatórios em PDF**
+- Dashboard ampliado com funcionários por setor, totais gerais (acidentes,
+  EPIs entregues, exames e treinamentos realizados) e resumo dos planos de
+  ação psicossociais
+- Botão "Baixar relatório geral (PDF)" no dashboard, com os mesmos dados da
+  tela
+- Botão "Baixar PDF" no relatório de acidentes
+- Toda a lógica de agregação de dados foi centralizada em
+  `app/relatorios.py`, reaproveitada tanto pelas telas HTML quanto pelos
+  PDFs (`app/relatorios_pdf.py`) — evita ter a mesma conta feita em dois
+  lugares que podem ficar dessincronizados
 
-- **Fase 7 — Dashboard consolidado e exportação de relatórios em PDF**.
+## Próximos passos (ideias para continuar)
+
+O roadmap original (7 fases) está completo. Algumas ideias para quem quiser
+continuar evoluindo o projeto:
+
+- Login para funcionários (hoje só existe usuário administrador)
+- Upload de arquivos (anexar o PDF do PGR/PCMSO, fotos de acidentes)
+- Notificações por e-mail quando um item estiver vencendo
+- Gráficos no dashboard (ex.: Chart.js) além das tabelas atuais
+- Migrar de SQLite para PostgreSQL para uso em produção
+- Testes automatizados (pytest) cobrindo as rotas principais
 
 ## Aprendendo com este projeto
 

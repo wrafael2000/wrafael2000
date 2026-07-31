@@ -3,7 +3,10 @@
 {% block conteudo %}
 <div class="cabecalho-pagina">
   <h1>Relatório de acidentes</h1>
-  <a href="{{ url_for('acidentes.listar') }}" class="botao-secundario">Voltar à lista</a>
+  <div>
+    <a href="{{ url_for('acidentes.relatorio_pdf') }}" class="botao-secundario">Baixar PDF</a>
+    <a href="{{ url_for('acidentes.listar') }}" class="botao-secundario">Voltar à lista</a>
+  </div>
 </div>
 
 <div class="cards-resumo">

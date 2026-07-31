@@ -1,12 +1,11 @@
-from collections import Counter
-from datetime import date, timedelta
-
-from flask import Blueprint, flash, redirect, render_template, url_for
+from flask import Blueprint, flash, redirect, render_template, send_file, url_for
 from flask_login import login_required
 
 from ..extensions import db
 from ..forms import AcidenteForm
 from ..models import Acidente, Funcionario
+from ..relatorios import coletar_dados_acidentes
+from ..relatorios_pdf import gerar_pdf_relatorio_acidentes
 
 acidentes_bp = Blueprint("acidentes", __name__, url_prefix="/acidentes")
 
@@ -83,23 +82,17 @@ def excluir(acidente_id):
 @acidentes_bp.route("/relatorio")
 @login_required
 def relatorio():
-    acidentes = Acidente.query.all()
+    return render_template("acidentes/relatorio.html", **coletar_dados_acidentes())
 
-    por_gravidade = Counter(a.gravidade for a in acidentes)
-    por_tipo = Counter(a.tipo for a in acidentes)
-    total_dias_afastamento = sum(a.dias_afastamento or 0 for a in acidentes)
 
-    doze_meses_atras = date.today().replace(day=1) - timedelta(days=365)
-    por_mes = Counter(
-        a.data.strftime("%Y-%m") for a in acidentes if a.data >= doze_meses_atras
-    )
-    por_mes_ordenado = sorted(por_mes.items())
-
-    return render_template(
-        "acidentes/relatorio.html",
-        total=len(acidentes),
-        por_gravidade=por_gravidade,
-        por_tipo=por_tipo,
-        total_dias_afastamento=total_dias_afastamento,
-        por_mes=por_mes_ordenado,
+@acidentes_bp.route("/relatorio.pdf")
+@login_required
+def relatorio_pdf():
+    dados = coletar_dados_acidentes()
+    pdf = gerar_pdf_relatorio_acidentes(dados)
+    return send_file(
+        pdf,
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name="relatorio-acidentes.pdf",
     )
