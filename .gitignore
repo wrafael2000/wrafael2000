@@ -7,3 +7,10 @@ env/
 instance/
 *.db
 .DS_Store
+
+# Artefatos de build do executável desktop (gerados por build_windows.bat)
+.venv_build/
+build/
+dist/
+*.spec
+dados/
