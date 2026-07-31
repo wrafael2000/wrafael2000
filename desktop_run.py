@@ -75,7 +75,15 @@ def resetar_senha(app):
         email = input("E-mail do usuário: ").strip().lower()
         usuario = Usuario.query.filter_by(email=email).first()
         if not usuario:
-            print(f"Nenhum usuário encontrado com o e-mail '{email}'.")
+            print(f"\nNenhum usuário encontrado com o e-mail '{email}'.")
+            todos = Usuario.query.all()
+            if todos:
+                print("E-mails cadastrados neste banco de dados:")
+                for u in todos:
+                    print(f"  - {u.email}")
+                print("\nRode de novo com --resetar-senha e digite um desses e-mails.")
+            else:
+                print("Não há nenhum usuário cadastrado neste banco de dados.")
             return
 
         senha = getpass("Nova senha: ")

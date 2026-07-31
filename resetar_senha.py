@@ -60,7 +60,15 @@ def main():
         email = input("E-mail do usuário: ").strip().lower()
         usuario = Usuario.query.filter_by(email=email).first()
         if not usuario:
-            print(f"Nenhum usuário encontrado com o e-mail '{email}'.")
+            print(f"\nNenhum usuário encontrado com o e-mail '{email}'.")
+            todos = Usuario.query.all()
+            if todos:
+                print("E-mails cadastrados neste banco de dados:")
+                for u in todos:
+                    print(f"  - {u.email}")
+                print("\nRode o script de novo e digite um desses e-mails.")
+            else:
+                print("Não há nenhum usuário cadastrado neste banco de dados.")
             sys.exit(1)
 
         senha = getpass("Nova senha: ")
